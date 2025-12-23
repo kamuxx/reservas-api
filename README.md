@@ -25,6 +25,20 @@ El objetivo principal es proporcionar una **API RESTful robusta, escalable y seg
 
 ---
 
+## 🏗️ Arquitectura y Patrones de Diseño
+
+*   **Patrón Arquitectónico:** Arquitectura en Capas (Layered Architecture) con enfoque en *Clean Architecture*.
+*   **Capas Definidas:**
+    *   **Capa de Presentación:** Controladores delgados (Slim Controllers) para manejo de Requests/Responses.
+    *   **Capa de Aplicación (Use Cases):** Clases dedicadas a orquestar la lógica de negocio pura.
+    *   **Capa de Infraestructura (Repositories):** Implementación del patrón *Repository* para la abstracción de la persistencia.
+*   **Patrones Adicionales:**
+    *   **Inyección de Dependencias:** Desacoplamiento de componentes mediante el contenedor de servicios de Laravel.
+    *   **Data Transfer Objects (DTOs):** (Opcional según implementación futura) para el paso de datos entre capas.
+    *   **Contract-Based Programming:** Uso de interfaces en repositorios para asegurar la flexibilidad y testeabilidad.
+
+---
+
 ## 📋 Requisitos Previos
 
 Antes de comenzar, asegúrate de tener instalado lo siguiente:
