@@ -8,18 +8,24 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 ## [Unreleased]
 
 ### 🚀 Añadido
-- **Manejo de Errores:** Implementación de `serverError` y `writeLogError` en `Controller` base para respuestas JSON estandarizadas (500) y logging estructurado con trazas de pila filtradas (excluyendo vendor).
-- **Modelo User:** Asignación automática de UUID, Rol ('user') y Estatus ('active') mediante Eloquent Model Hooks (`booted`). Relaciones `role` y `status` definidas.
+- **Manejo de Errores:** Implementación de `serverError` y `writeLogError` en `Controller` base para respuestas JSON estandarizadas (500) y logging estructurado.
+- **Modelo User:** Asignación automática de UUID, Rol (`user`) y Estatus (`pending`) mediante Eloquent Model Hooks.
+- **Testing:** Suite completa de pruebas en `RegisterNewUserTest` cubriendo:
+    - Validación profunda de estructura de respuesta JSON.
+    - Casos extremos: emails duplicados, formatos inválidos, campos vacíos y datos corruptos.
+    - Confirmación de persistencia y valores por defecto (Rol y Estatus) en la base de datos.
 
 ### ⚡ Optimizado
-- **Rendimiento de Tests:** Migración completa a base de datos en memoria (`:memory:`) para ejecución rápida de pruebas unitarias y de integración.
+- **Rendimiento de Tests:** Migración completa a base de datos en memoria (`:memory:`) para ejecución rápida.
+- **Consistencia Documental:** Estandarización de términos en documentación (`pending`/`active`) para alinearse perfectamente con el código, seeders y modelos, eliminando discrepancias "inglés vs español".
 - **Limpieza de Controladores:** Refactorización de `RegisterController` para delegar lógica de error al controlador base.
-- **Repositorios:** Desacoplamiento de `UserRepository` de `BaseRepository` para simplificar la lógica de inserción.
+- **Repositorios:** Desacoplamiento de `UserRepository` para simplificar la lógica de inserción.
 
 ### 🔧 Corregido
-- **Migraciones:** Eliminada definición redundante de clave primaria (`->primary()`) en columnas `id()` que causaba errores en SQLite estricto.
-- **Bug en Modelo User:** Corregida lógica en `User::booted` para buscar roles/estatus usando `where` en lugar de `find` (que causaba errores al acceder propiedades en null).
-- **Pruebas:** Solucionado fallo en `RegisterNewUserTest` asegurando la ejecución previa de Seeders en `TestCase`.
+- **Migraciones:** Eliminada definición redundante de clave primaria en migraciones para compatibilidad con SQLite estricto.
+- **Bug en Modelo User:** Corregida lógica en `User::booted` para buscar roles/estatus de manera segura.
+- **Estado Inicial de Usuario:** Corregido el estado por defecto de `active` a `pending` en el modelo `User` para cumplir con la regla de negocio de activación.
+- **Pruebas:** Solucionado fallo en ejecución de seeders en `TestCase`.
 
 ## [0.1.0] - 2025-12-23
 

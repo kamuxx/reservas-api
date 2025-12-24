@@ -53,7 +53,7 @@ El siguiente catálogo de entidades describe las relaciones y cardinalidades. Un
 <summary>ENTIDAD: user_statuses ✅ (status)</summary>
 
 **NIVEL DE DEPENDENCIA:** 0
-**DESCRIPCIÓN:** Catálogo de estados de cuenta de usuario (ej: 'pendiente_activacion', 'activo', 'suspendido').
+**DESCRIPCIÓN:** Catálogo de estados de cuenta de usuario (ej: 'pending', 'active', 'suspended').
 
 **ATRIBUTOS:**
 - `id`: INT, PRIMARY KEY AUTO_INCREMENT

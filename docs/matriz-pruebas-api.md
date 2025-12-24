@@ -6,7 +6,7 @@
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|
-| TP-HU001-001 | FP | Registro exitoso de nuevo usuario | 1. Sistema operativo<br>2. Tablas user_roles y user_statuses configuradas | name: "Juan Pérez"<br>email: "juan@test.com"<br>phone: "5551234567"<br>password: "Pass123!" | 1. Enviar POST /api/register con datos válidos<br>2. Verificar respuesta | HTTP 201 Created<br>Usuario creado con status pendiente_activacion<br>No incluye password en respuesta | Usuario creado exitosamente |
+| TP-HU001-001 | FP | Registro exitoso de nuevo usuario | 1. Sistema operativo<br>2. Tablas user_roles y user_statuses configuradas | name: "Juan Pérez"<br>email: "juan@test.com"<br>phone: "5551234567"<br>password: "Pass123!" | 1. Enviar POST /api/register con datos válidos<br>2. Verificar respuesta | HTTP 201 Created<br>Usuario creado con status pending<br>No incluye password en respuesta | Usuario creado exitosamente |
 | TP-HU001-002 | FA-001 | Email ya registrado | 1. Usuario con email "existente@test.com" ya registrado | email: "existente@test.com"<br>otros campos válidos | 1. Enviar POST /api/register con email existente | HTTP 409 Conflict o 400 Bad Request<br>Mensaje indicando email en uso | Sistema previene duplicados |
 | TP-HU001-003 | FA-002 | Password no cumple política | - | password: "123" (corta)<br>password: "password" (sin mayúsculas)<br>password: "PASSWORD" (sin minúsculas)<br>password: "Password" (sin números)<br>password: "Password123" (sin especial) | 1. Enviar POST /api/register con cada password inválida | HTTP 400 Bad Request<br>Mensaje específico de error | Valida todos los criterios de seguridad |
 | TP-HU001-004 | FA-003 | Campos requeridos faltantes | - | Omisiones de: name, email, phone, password | 1. Enviar POST /api/register con campos faltantes | HTTP 400 Bad Request<br>Mensaje indicando campos requeridos | Todos los campos son obligatorios |
@@ -16,10 +16,10 @@
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|
-| TP-HU002-001 | FP | Activación exitosa con token válido | 1. Usuario con status pendiente_activacion<br>2. Token válido generado | token: "abc123-token-valido" | 1. Acceder GET /api/activate/{token}<br>2. Verificar respuesta | HTTP 200 OK<br>Usuario actualizado a status activo<br>Token marcado como usado | Activación completa |
+| TP-HU002-001 | FP | Activación exitosa con token válido | 1. Usuario con status pending<br>2. Token válido generado | token: "abc123-token-valido" | 1. Acceder GET /api/activate/{token}<br>2. Verificar respuesta | HTTP 200 OK<br>Usuario actualizado a status active<br>Token marcado como usado | Activación completa |
 | TP-HU002-002 | FA-001 | Token expirado | 1. Token con expires_at en pasado | token expirado | 1. Acceder con token expirado | HTTP 400/410<br>Mensaje "Token expirado" | Rechaza tokens vencidos |
 | TP-HU002-003 | FA-002 | Token ya utilizado | 1. Token con used_at no null | token ya usado | 1. Acceder con token ya usado | HTTP 400<br>Mensaje "Token ya utilizado" | Token de un solo uso |
-| TP-HU002-004 | FA-003 | Usuario no pendiente | 1. Usuario ya activo/bloqueado | token válido para usuario activo | 1. Acceder con token para usuario no pendiente | HTTP 400<br>Mensaje "Usuario no requiere activación" | Solo activa usuarios pendientes |
+| TP-HU002-004 | FA-003 | Usuario no pendiente | 1. Usuario ya active/bloqueado | token válido para usuario active | 1. Acceder con token para usuario no pendiente | HTTP 400<br>Mensaje "Usuario no requiere activación" | Solo activa usuarios pendientes |
 | TP-HU002-005 | FA-004 | Token no existe | - | token: "token-inexistente" | 1. Acceder con token inexistente | HTTP 404 Not Found | Valida existencia del token |
 | TP-HU002-006 | FS-001 | Fuerza bruta tokens | - | - | 1. Intentar >20 activaciones con tokens inválidos desde misma IP | HTTP 429 o bloqueo temporal<br>Registro en audit trail | Protección contra fuerza bruta |
 
@@ -27,10 +27,10 @@
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|
-| TP-HU003-001 | FP | Login exitoso | 1. Usuario activo<br>2. Credenciales correctas | email: "usuario@test.com"<br>password: "Pass123!" | 1. Enviar POST /api/login con credenciales<br>2. Verificar respuesta | HTTP 200 OK<br>Token JWT válido retornado<br>last_login_at actualizado<br>Audit trail registrado | Autenticación exitosa |
+| TP-HU003-001 | FP | Login exitoso | 1. Usuario active<br>2. Credenciales correctas | email: "usuario@test.com"<br>password: "Pass123!" | 1. Enviar POST /api/login con credenciales<br>2. Verificar respuesta | HTTP 200 OK<br>Token JWT válido retornado<br>last_login_at actualizado<br>Audit trail registrado | Autenticación exitosa |
 | TP-HU003-002 | FA-001 | Usuario no existe | - | email: "noexiste@test.com"<br>password: cualquier | 1. Enviar POST /api/login | HTTP 401 Unauthorized<br>Mensaje genérico<br>Audit trail con 'failed_user_not_found' | No revela existencia de usuario |
-| TP-HU003-003 | FA-002 | Password incorrecta | 1. Usuario activo existe | email válido<br>password: "Incorrecta123!" | 1. Enviar POST /api/login | HTTP 401 Unauthorized<br>Mensaje genérico<br>Audit trail con 'failed_password' | No revela qué falló específicamente |
-| TP-HU003-004 | FA-003 | Usuario no activo | 1. Usuario con status pendiente/bloqueado | credenciales correctas para usuario inactivo | 1. Enviar POST /api/login | HTTP 401/403<br>Audit trail con status apropiado | Solo usuarios activos pueden login |
+| TP-HU003-003 | FA-002 | Password incorrecta | 1. Usuario active existe | email válido<br>password: "Incorrecta123!" | 1. Enviar POST /api/login | HTTP 401 Unauthorized<br>Mensaje genérico<br>Audit trail con 'failed_password' | No revela qué falló específicamente |
+| TP-HU003-004 | FA-003 | Usuario no active | 1. Usuario con status pending/blocked | credenciales correctas para usuario inactivo | 1. Enviar POST /api/login | HTTP 401/403<br>Audit trail con status apropiado | Solo usuarios activos pueden login |
 | TP-HU003-005 | FS-001 | Fuerza bruta desde IP | - | - | 1. Realizar >5 intentos fallidos desde misma IP en 5 minutos | Intento 6+ recibe HTTP 429 o bloqueo<br>Registro en audit trail | Protección contra ataques |
 
 ### HU-004-UC-001: Cierre de Sesión (Logout)

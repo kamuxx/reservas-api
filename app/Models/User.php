@@ -59,7 +59,7 @@ class User extends Authenticatable
             $role = Role::where('name', 'user')->first();
             if($role) $user->role()->associate($role);
             
-            $status = Status::where('name', 'active')->first();
+            $status = Status::where('name', 'pending')->first();
             if($status) $user->status()->associate($status);
         });
     }

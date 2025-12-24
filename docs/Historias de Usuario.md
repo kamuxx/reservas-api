@@ -16,9 +16,9 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
     2. El campo `email` debe ser único en la tabla `users`. Una petición con un email ya existente debe ser rechazada.
     3. La `password` debe cumplir con la política de seguridad del sistema (ej. mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 caracter especial y solo se permitiran: `!#@$%&*`.).
     4. Al crear el usuario, se le asignará el `role_id` correspondiente a "cliente" por defecto.
-    5. El nuevo usuario se creará con el estado `pendiente_activacion`.
+    5. El nuevo usuario se creará con el estado `pending`.
 - **Estados del dominio involucrados:**
-    - `user.estado`: `pendiente_activacion` (estado final).
+    - `user.estado`: `pending` (estado final).
 - **Condición de completitud de la HU:** La HU está completa cuando el endpoint `POST /api/register` está implementado y todas las reglas de negocio son validadas por pruebas de integración.
 
 ### HU-002: Activación de Cuenta de Usuario
@@ -30,11 +30,11 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
 - **Reglas de negocio estrictas:**
     1. La API recibirá un token de activación único.
     2. El sistema validará que el token existe, no ha expirado y no ha sido utilizado previamente.
-    3. Si el token es válido, el estado del usuario asociado pasará de `pendiente_activacion` a `activo`.
+    3. Si el token es válido, el estado del usuario asociado pasará de `pending` a `active`.
     4. Un token inválido o expirado resultará en una respuesta de error.
-    5. No se puede activar un usuario que no esté en estado `pendiente_activacion`.
+    5. No se puede activar un usuario que no esté en estado `pending`.
 - **Estados del dominio involucrados:**
-    - `user.estado`: `pendiente_activacion` (inicial), `activo` (final).
+    - `user.estado`: `pending` (inicial), `active` (final).
 - **Condición de completitud de la HU:** La HU está completa cuando el endpoint (ej. `GET /api/activate/{token}`) está implementado y valida correctamente los tokens.
 
 ### HU-003: Autenticación de Usuario (Login)
@@ -47,10 +47,10 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
     1. La petición debe contener `email` y `password`.
     2. El `email` debe corresponder a un usuario existente.
     3. La `password` debe ser validada contra el hash almacenado para dicho usuario.
-    4. El usuario debe tener el estado `activo`. Peticiones para usuarios `bloqueado` o `pendiente_activacion` deben ser rechazadas.
+    4. El usuario debe tener el estado `active`. Peticiones para usuarios `blocked` o `pending` deben ser rechazadas.
     5. Una autenticación exitosa debe generar y retornar un token JWT con `user_id`, `role` y una fecha de expiración (`exp`).
 - **Estados del dominio involucrados:**
-    - `user.estado`: `activo` (requerido).
+    - `user.estado`: `active` (requerido).
 - **Condición de completitud de la HU:** La HU está completa cuando el endpoint `POST /api/login` está implementado y cumple todas las reglas.
 
 ### HU-004: Cierre de Sesión (Logout)

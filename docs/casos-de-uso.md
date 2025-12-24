@@ -4,7 +4,7 @@
 
 | Código | Nombre | HU Relacionada | Objetivo | Descripción |
 |--------|--------|----------------|----------|-------------|
-| HU-001-UC-001 | Registro de Nuevo Usuario | HU-001 | Permitir que nuevos clientes se registren en el sistema | El usuario proporciona sus datos para crear una cuenta con estado pendiente de activación |
+| HU-001-UC-001 | Registro de Nuevo Usuario | HU-001 | Permitir que nuevos clientes se registren en el sistema | El usuario proporciona sus datos para crear una cuenta con estado pendiente de activación (pending) |
 | HU-002-UC-001 | Activación de Cuenta de Usuario | HU-002 | Verificar la propiedad del email del usuario | El usuario activa su cuenta mediante un token de activación |
 | HU-003-UC-001 | Autenticación de Usuario (Login) | HU-003 | Permitir acceso al sistema a usuarios registrados y activos | El usuario ingresa sus credenciales para obtener un token JWT |
 | HU-004-UC-001 | Cierre de Sesión (Logout) | HU-004 | Invalidar de forma segura la sesión actual | El usuario cierra su sesión invalidando el JWT en el servidor |
@@ -25,7 +25,7 @@
 ### Precondiciones
 1. El usuario no tiene una cuenta activa en el sistema
 2. El sistema tiene configurado al menos un rol "cliente" en la tabla `user_roles` (entidades.md)
-3. El sistema tiene configurado al menos un estado "pendiente_activacion" en la tabla `user_statuses` (entidades.md)
+3. El sistema tiene configurado al menos un estado "pending" en la tabla `user_statuses` (entidades.md)
 
 ### Desarrollo
 #### Acciones del Usuario/Cliente API
@@ -36,7 +36,7 @@
 3. Valida unicidad del `email` en la tabla `users` (Historias de Usuario.md - HU-001)
 4. Valida que `password` cumpla política de seguridad (mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número, 1 caracter especial permitido: `!#@$%&*`)
 5. Obtiene `role_id` correspondiente a "cliente" de la tabla `user_roles` (entidades.md)
-6. Obtiene `status_id` correspondiente a "pendiente_activacion" de la tabla `user_statuses` (entidades.md)
+6. Obtiene `status_id` correspondiente a "pending" de la tabla `user_statuses` (entidades.md)
 7. Hashea la contraseña y crea registro en tabla `users` con `status_id` apropiado
 8. (Implícito) Genera y almacena token de activación en `activation_tokens` (HU-002)
 9. Retorna respuesta HTTP 201 con datos del usuario creado (sin password)
@@ -44,7 +44,7 @@
 ### Flujos Cubiertos
 #### Flujo Principal (HU-001-UC-001-FP)
 1. Usuario envía datos válidos y únicos
-2. Sistema valida, crea usuario con estado `pendiente_activacion`
+2. Sistema valida, crea usuario con estado `pending`
 3. Sistema retorna éxito (201 Created)
 
 #### Flujos Alternos
@@ -70,7 +70,7 @@
 3. Sistema retorna error 429 Too Many Requests
 
 ### Postcondiciones
-1. Se crea un nuevo registro en la tabla `users` con `status_id` = "pendiente_activacion"
+1. Se crea un nuevo registro en la tabla `users` con `status_id` = "pending"
 2. Se genera un registro en `activation_tokens` asociado al usuario (implícito para HU-002)
 3. El usuario no puede autenticarse hasta activación
 
@@ -83,7 +83,7 @@ Justificación: Tras el registro exitoso, el usuario debe activar su cuenta medi
 ## HU-002-UC-001: Activación de Cuenta de Usuario
 
 ### Precondiciones
-1. Existe un usuario con estado "pendiente_activacion" en tabla `users`
+1. Existe un usuario con estado "pending" en tabla `users`
 2. Existe un token de activación válido en tabla `activation_tokens` asociado al usuario
 3. El token no ha expirado (`expires_at` > ahora) y no ha sido usado (`used_at` IS NULL)
 
@@ -94,8 +94,8 @@ Justificación: Tras el registro exitoso, el usuario debe activar su cuenta medi
 #### Respuestas del Sistema
 2. Busca token en `activation_tokens` usando índice `idx_activation_tokens_token_hash`
 3. Valida que token exista, no haya expirado y no haya sido usado
-4. Valida que usuario asociado tenga `status_id` = "pendiente_activacion" en `users`
-5. Actualiza `status_id` del usuario a "activo" (consulta `user_statuses`)
+4. Valida que usuario asociado tenga `status_id` = "pending" en `users`
+5. Actualiza `status_id` del usuario a "active" (consulta `user_statuses`)
 6. Marca token como usado (`used_at` = NOW())
 7. Retorna respuesta de éxito
 
@@ -114,8 +114,8 @@ Justificación: Tras el registro exitoso, el usuario debe activar su cuenta medi
 1. Token tiene `used_at` NOT NULL
 2. Sistema retorna error 400
 
-**HU-002-UC-001-FA-003: Usuario no en estado pendiente_activacion**
-1. Usuario ya está activo, bloqueado, etc.
+**HU-002-UC-001-FA-003: Usuario no en estado pending**
+1. Usuario ya está active, bloqueado, etc.
 2. Sistema retorna error 400
 
 **HU-002-UC-001-FA-004: Token no existe**
@@ -128,7 +128,7 @@ Justificación: Tras el registro exitoso, el usuario debe activar su cuenta medi
 2. Sistema podría registrar en `login_audit_trails` y aplicar rate limiting
 
 ### Postcondiciones
-1. El usuario tiene `status_id` = "activo" en tabla `users`
+1. El usuario tiene `status_id` = "active" en tabla `users`
 2. El token de activación tiene `used_at` = fecha actual
 3. El usuario puede autenticarse (HU-003)
 
@@ -141,7 +141,7 @@ Justificación: Una vez activada la cuenta, el usuario naturalmente procederá a
 ## HU-003-UC-001: Autenticación de Usuario (Login)
 
 ### Precondiciones
-1. Existe usuario con estado "activo" en tabla `users`
+1. Existe usuario con estado "active" en tabla `users`
 2. El usuario tiene `password_hash` almacenado
 
 ### Desarrollo
@@ -150,7 +150,7 @@ Justificación: Una vez activada la cuenta, el usuario naturalmente procederá a
 
 #### Respuestas del Sistema
 2. Busca usuario por `email` usando índice `idx_users_email`
-3. Verifica que `status_id` corresponda a "activo" (consulta `user_statuses`)
+3. Verifica que `status_id` corresponda a "active" (consulta `user_statuses`)
 4. Compara hash de `password` proporcionada con `password_hash` almacenado
 5. Genera token JWT con `user_id`, `role` y `exp`
 6. Actualiza `last_login_at` del usuario
@@ -159,7 +159,7 @@ Justificación: Una vez activada la cuenta, el usuario naturalmente procederá a
 
 ### Flujos Cubiertos
 #### Flujo Principal (HU-003-UC-001-FP)
-1. Credenciales correctas y usuario activo
+1. Credenciales correctas y usuario active
 2. Sistema genera y retorna JWT
 3. Registra auditoría exitosa
 
@@ -174,8 +174,8 @@ Justificación: Una vez activada la cuenta, el usuario naturalmente procederá a
 2. Sistema registra en `login_audit_trails` con status 'failed_password'
 3. Retorna error 401 Unauthorized
 
-**HU-003-UC-001-FA-003: Usuario no activo**
-1. Usuario existe pero no tiene estado "activo" (ej: pendiente_activacion, bloqueado)
+**HU-003-UC-001-FA-003: Usuario no active**
+1. Usuario existe pero no tiene estado "active" (ej: pending, bloqueado)
 2. Sistema registra en `login_audit_trails` con status apropiado
 3. Retorna error 401/403
 
