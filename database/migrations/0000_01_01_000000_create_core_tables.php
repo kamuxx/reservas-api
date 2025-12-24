@@ -12,26 +12,30 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('status', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
+            $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name', 255);
             $table->timestamps();
         });
 
         //Roles de los usuarios, se crea la tabla con uuid para que sea facilmente escalable y conserve seguridad para el jwt
         Schema::create('roles', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
+            $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name', 255)->comment('inicialmente seran: user, admin');
             $table->timestamps();
         });
 
         Schema::create('space_types', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
+            $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name', 255);
             $table->timestamps();
         });
 
         Schema::create('pricing_rules', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
+            $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name', 100)->unique();
             $table->text('description')->nullable();
 
@@ -57,7 +61,8 @@ return new class extends Migration
         });
 
         Schema::create('features', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
+            $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name', 255);
             $table->timestamps();
         });

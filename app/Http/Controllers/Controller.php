@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+
 
 abstract class Controller
 {
@@ -47,5 +49,52 @@ abstract class Controller
             $output["errors"] = $errors;
         $response =  response()->json($output,$statusCode);
         return $response;
+    }
+
+    /**
+     * Maneja excepciones de servidor de forma centralizada.
+     *
+     * @param \Throwable $th La excepción capturada.
+     * @param string $message Mensaje base para el usuario.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function serverError(\Throwable $th, string $message = "Error creating user"): JsonResponse {
+        
+        $this->writeLogError($th, $message);
+
+        $error = ["message" => $th->getMessage()];
+        if(config('app.debug') && env('APP_ENV') === 'development'){
+            $error["line"] = $th->getLine();
+            $error["file"] = $th->getFile();
+        }    
+        
+        $userMessage = $message . ", please notify the administrator the following error: DE" . date('YmdHis');
+        
+        return $this->error(500, $userMessage, $error);
+    }
+
+    protected function writeLogError(\Throwable $th, string $message = "Error creating user"){
+        // Filtrar el stack trace para mostrar solo archivos de la aplicación (excluyendo vendor)
+        $appTrace = collect($th->getTrace())
+            ->filter(function ($frame) {
+                return isset($frame['file']) && !str_contains($frame['file'], 'vendor');
+            })
+            ->map(function ($frame) {
+                return [
+                    'file' => $frame['file'],
+                    'line' => $frame['line'] ?? '?',
+                    'class' => $frame['class'] ?? '?',
+                    'function' => $frame['function'] ?? '?',
+                ];
+            })
+            ->values();
+
+        // Loguear el error con detalles estructurados
+        Log::error($message, [
+            'message' => $th->getMessage(),
+            'file' => $th->getFile(),
+            'line' => $th->getLine(),
+            'app_trace' => $appTrace
+        ]);
     }
 }

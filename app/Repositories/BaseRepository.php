@@ -2,6 +2,8 @@
 
 namespace Repositories;
 
+use Illuminate\Database\Eloquent\Model;
+
 class BaseRepository
 {
  

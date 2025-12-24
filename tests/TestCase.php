@@ -3,6 +3,8 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Database\Seeders\StatusSeeder;
+use Database\Seeders\RoleSeeder;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -13,20 +15,20 @@ abstract class TestCase extends BaseTestCase
 
     protected function setUp(): void
     {
-        // Crear archivo de base de datos si no existe (antes de arrancar la app)
-        $dbPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'reservas-testing.db';
-        if (!file_exists($dbPath)) {
-            touch($dbPath);
-        }
-
         parent::setUp();
 
-        // Ejecutar migraciones una sola vez al inicio
-        static $migrated = false;
-        if (!$migrated) {
-            $this->artisan('migrate:fresh --env=testing');
-            $migrated = true;
+        $dbConfig = config('database.connections.sqlite');
+        
+        // Solo intentamos crear el archivo si no es una base de datos en memoria
+        if ($dbConfig['driver'] === 'sqlite' && $dbConfig['database'] !== ':memory:') {
+            if (!file_exists($dbConfig['database'])) {
+                file_put_contents($dbConfig['database'], '');
+            }
         }
+
+        $this->artisan('migrate');
+        $this->seed(StatusSeeder::class);
+        $this->seed(RoleSeeder::class);
     }
 
 }
