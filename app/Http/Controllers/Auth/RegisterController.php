@@ -16,9 +16,11 @@ class RegisterController extends Controller
 
     public function register(RegisterUserRequest $request){
         try {
-            $user = $this->userUseCases->registerNewUser($request->all());
+            $user = $this->userUseCases->registerNewUser($request->all());            
             return $this->success(201,"User was created successfully",$user->toArray());
         } catch (\PDOException $th) {
+            return $this->serverError($th, "Error creating user");
+        } catch (\Exception $th) {
             return $this->serverError($th, "Error creating user");
         }
     }

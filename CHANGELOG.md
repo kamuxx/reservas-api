@@ -5,6 +5,22 @@ Todas las actualizaciones notables de este proyecto serán documentadas en este 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.3.0] - 2025-12-26
+
+### 🚀 Añadido
+- **Activación de Cuenta:** Nueva funcionalidad para activar cuentas de usuario mediante token y código de activación.
+    - Endpoint `POST api/auth/activate` en `routes/api.php`.
+    - Controlador `AuthController` para manejar la solicitud.
+    - Repositorio `TokenRepository` para la gestión de tokens de activación.
+    - Lógica de negocio en `UserUseCases::activateAccount` validando expiración, uso previo y código.
+- **Mailing:** Instalación de librerías para envío de correos: `railsware/mailtrap-php`, `guzzlehttp/guzzle`, `php-http/guzzle7-adapter` como preparación para implementar UC 002 (Activación de Cuenta).
+- **Testing:** Suite de pruebas `ValidateAccountTest` cubriendo el flujo completo de activación (éxito, token inválido, expirado).
+
+### ⚡ Optimizado
+- **UserUseCases:** Integración de `activateAccount` con validaciones de negocio robustas.
+
 ## [0.2.0] - 2025-12-24
 
 ### 🚀 Añadido

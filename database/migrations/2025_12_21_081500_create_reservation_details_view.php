@@ -10,9 +10,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $query = <<<'SQL'
-        DROP VIEW IF EXISTS reservation_details_view;
-        CREATE VIEW reservation_details_view AS
+        DB::statement("DROP VIEW IF EXISTS reservation_details_view;");
+        DB::statement("CREATE VIEW reservation_details_view AS
         SELECT 
             r.uuid AS reservation_uuid,
             r.event_name,
@@ -62,9 +61,7 @@ return new class extends Migration
         INNER JOIN status rs ON r.status_id = rs.uuid
         INNER JOIN pricing_rules pr ON r.pricing_rule_id = pr.uuid
         WHERE r.deleted_at IS NULL;
-        SQL;
-
-        DB::statement($query);
+        ");
     }
 
     /**

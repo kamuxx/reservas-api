@@ -2,14 +2,34 @@
 
 namespace Repositories;
 
+use App\Models\Status;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Repositories\Contracts\RepostoryContract;
 
-class UserRepository implements RepostoryContract
+class UserRepository extends BaseRepository
 {    
-    public function insert(array $data): User
+    /**
+     * Inserta un nuevo usuario
+     * @param array $data
+     * @return User
+     */
+    public static function createNewUser(array $data): User
     {
-        return User::create($data);
+        $user = self::insert(User::class, $data);
+        if(!$user) throw new \Exception("Error al insertar el usuario");
+        if(!$user instanceof User) throw new \Exception("Error al insertar el usuario");
+        return $user;
+    }
+
+    public static function updateUser(array $filters, array $data): bool
+    {
+        return self::update(User::class, $filters, $data);
+    }
+
+    public static function activateUser(array $filters): bool
+    {
+        $status = Status::where('name', 'active')->first();
+        if(!$status) throw new \Exception("Error al activar el usuario");
+        return self::update(User::class, $filters, ["status_id" => $status->uuid]);
     }
 }

@@ -45,7 +45,6 @@ class RegisterNewUserTest extends TestCase
         ["status" => $status] =  $user;
         $this->assertEquals('user',$role["name"]);
         $this->assertEquals('pending',$status["name"]);
-       //dd($content);
     }
 
     public function test_register_new_user_with_email_duplicate()

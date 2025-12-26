@@ -14,27 +14,28 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('name',255);
-            $table->string('email',255)->unique();
-            $table->string('phone',20);
+            $table->string('name', 255);
+            $table->string('email', 255)->unique();
+            $table->string('phone', 20);
             $table->string('password');
-            $table->string('role_id',36)->unique();
-            $table->string('status_id',36)->unique();
+            $table->string('role_id', 36)->index();
+            $table->string('status_id', 36)->index();
             $table->foreign('role_id')->references('uuid')->on('roles')->onDelete('cascade')->comment('UUID DE LA TABLA ROLES');
-            $table->foreign('status_id')->references('uuid')->on('status')->onDelete('cascade')->comment('UUID DE LA TABLA STATUS');            
+            $table->foreign('status_id')->references('uuid')->on('status')->onDelete('cascade')->comment('UUID DE LA TABLA STATUS');
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable()->default(null);
-        });        
+        });
 
         Schema::create('user_activation_tokens', function (Blueprint $table) {
             $table->uuid('uuid')->primary()->comment('mismo uuid de la tabla usuarios');
-            $table->string('email',255)->unique();
-            $table->string('token',255)->unique();
-            $table->smallInteger('activation_code')->nullable()->default(6);
+            $table->string('email', 255)->unique();
+            $table->string('token', 255)->unique();
+            $table->mediumInteger('activation_code');
             $table->timestamp('expiread_at')->nullable()->default(null);
             $table->timestamp('validated_at')->nullable()->default(null);
-            $table->timestamp('used_at')->nullable()->default(null);            
-            $table->timestamp('created_at')->nullable();
+            $table->timestamp('used_at')->nullable()->default(null);
+            $table->timestamps();
+            
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -64,7 +65,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');        
+
+        Schema::dropIfExists('users');
         Schema::dropIfExists('user_activation_tokens');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
