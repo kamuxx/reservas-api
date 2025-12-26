@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('email', 255)->unique();
             $table->string('token', 255)->unique();
             $table->mediumInteger('activation_code');
-            $table->timestamp('expiread_at')->nullable()->default(null);
+            $table->timestamp('expired_at')->nullable()->default(null);
             $table->timestamp('validated_at')->nullable()->default(null);
             $table->timestamp('used_at')->nullable()->default(null);
             $table->timestamps();

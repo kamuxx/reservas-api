@@ -13,6 +13,8 @@ use Exception;
 use Throwable;
 use Carbon\Carbon;
 use Repositories\TokenRepository;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class UserUseCases
 {
@@ -25,7 +27,7 @@ class UserUseCases
     {
 
         $user =  $this->userRepository::createNewUser($data);
-        $user->load('role','status');
+        $user->load('role', 'status');
         if (!$user instanceof User) throw new \Exception("Error al insertar el usuario");
         try {
             $user->notify(new UserRegisteredNotificacion($user));
@@ -38,24 +40,33 @@ class UserUseCases
 
     public function activateAccount(?string $token = null, ?int $activationCode = null): void
     {
+        $oToken = $this->tokenRepository->getByToken($token);
+        if (!$oToken)
+            throw new NotFoundHttpException("No se encontro el token");
+
+        if ($oToken->isExpired())
+            throw new UnprocessableEntityHttpException("El token ha expirado");
+
+        if ($oToken->isUsed() || $oToken->isValidated())
+            throw new UnprocessableEntityHttpException("El token ya ha sido utilizado");
+
+        if (!$oToken->isValidCode($activationCode))
+            throw new UnprocessableEntityHttpException("El codigo de activacion no es valido");
+
+        if ($oToken->user->isActive())
+            throw new UnprocessableEntityHttpException("El usuario ya esta activo");
+
         try {
-            $oToken = $this->tokenRepository->getByToken($token);
-            if (!$oToken)
-                throw new \Exception("No se encontro el token");
-
-            if ($oToken->isExpired())
-                throw new \Exception("El token ha expirado");
-
-            if ($oToken->isUsed())
-                throw new \Exception("El token ya ha sido utilizado");
-
-            if (!$oToken->isValidCode($activationCode))
-                throw new \Exception("El codigo de activacion no es valido");
-
             $this->tokenRepository->update(UserActivationToken::class, ["uuid" => $oToken->uuid], ["validated_at" => Carbon::now(), "used_at" => Carbon::now()]);
             $this->userRepository::activateUser(["uuid" => $oToken->uuid]);
+        } catch (NotFoundHttpException | UnprocessableEntityHttpException $e) {
+            $exceptionMessage = "Error al activar la cuenta: " . $e->getMessage();
+            if ($e instanceof NotFoundHttpException)
+                throw new NotFoundHttpException($exceptionMessage);
+            if ($e instanceof UnprocessableEntityHttpException)
+                throw new UnprocessableEntityHttpException($exceptionMessage);
         } catch (Throwable $e) {
-            $exceptionMessage = "Error al activar la cuenta:    " . $e->getMessage();
+            $exceptionMessage = "Error al activar la cuenta: " . $e->getMessage();
             throw new \Exception($exceptionMessage);
         }
     }

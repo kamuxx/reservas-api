@@ -23,7 +23,7 @@ class ValidateAccountRequest extends FormRequest
     {
         return [
             "token" => "required|string",
-            "activation_code" => "required|numeric:6",
+            "activation_code" => "required|digits:6",
         ];
     }
 
@@ -32,8 +32,7 @@ class ValidateAccountRequest extends FormRequest
         return [
             "token.required" => "El token es obligatorio",
             "activation_code.required" => "El codigo de activacion es obligatorio",
-            "activation_code.numeric" => "El codigo de activacion debe ser un numero",
-            "activation_code.numeric:6" => "El codigo de activacion debe tener 6 digitos",
+            "activation_code.digits" => "El codigo de activacion debe tener 6 digitos",
         ];
     }
 

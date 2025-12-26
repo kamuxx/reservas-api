@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 
 abstract class Controller
@@ -84,6 +86,30 @@ abstract class Controller
         $userMessage = $message . ", please notify the administrator the following error: " . $code;
 
         return $this->error(500, $userMessage, $error);
+    }
+
+    protected function clientError(\Throwable $e, string $message = "Error creating user"): JsonResponse
+    {
+        $this->writeLogError($e, $message);
+
+        $error = ["message" => $e->getMessage()];
+        if (config('app.debug') && env('APP_ENV') === 'development') {
+            $error["line"] = $e->getLine();
+            $error["file"] = $e->getFile();
+        }
+
+        // Determinar prefijo
+        $prefix = "CL"; // Client Exception por defecto
+        if ($e instanceof \PDOException || $e instanceof QueryException) {
+            $prefix = "DE"; // Database Exception
+        }
+
+        $code = $prefix . date('YmdHis');
+        $statusCode = $e instanceof NotFoundHttpException ? 404 : 422;
+
+        $userMessage = $message . ", please notify the administrator the following error: " . $code;
+
+        return $this->error($statusCode, $userMessage, $error);
     }
 
     protected function writeLogError(\Throwable $th, string $message = "Error creating user")

@@ -10,16 +10,17 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 ## [0.3.0] - 2025-12-26
 
 ### 🚀 Añadido
-- **Activación de Cuenta:** Nueva funcionalidad para activar cuentas de usuario mediante token y código de activación.
-    - Endpoint `POST api/auth/activate` en `routes/api.php`.
-    - Controlador `AuthController` para manejar la solicitud.
-    - Repositorio `TokenRepository` para la gestión de tokens de activación.
-    - Lógica de negocio en `UserUseCases::activateAccount` validando expiración, uso previo y código.
-- **Mailing:** Instalación de librerías para envío de correos: `railsware/mailtrap-php`, `guzzlehttp/guzzle`, `php-http/guzzle7-adapter` como preparación para implementar UC 002 (Activación de Cuenta).
-- **Testing:** Suite de pruebas `ValidateAccountTest` cubriendo el flujo completo de activación (éxito, token inválido, expirado).
+- **Activación de Cuenta (HU-002):** Implementación completa del flujo de activación de cuentas.
+    - Endpoints: `POST api/auth/activate` (con soporte para GET y código en query string).
+    - Lógica de Negocio: Validación estricta de tokens (existencia, expiración, uso previo, código secundario y estado del usuario) en `UserUseCases`.
+    - Seguridad: Manejo de excepciones HTTP específicas (`NotFoundHttpException`, `UnprocessableEntityHttpException`) para respuestas 404/422 precisas.
+- **Testing:** Suite exhaustiva `ValidateAccountTest` con 9 escenarios de prueba (éxito, token inválido, expirado, usado, código incorrecto, etc.).
+- **Infraestructura:** Corrección crítica en migración de `users` para manejar índices únicos y prevenir conflictos de integridad (`Duplicate entry`).
 
 ### ⚡ Optimizado
-- **UserUseCases:** Integración de `activateAccount` con validaciones de negocio robustas.
+- **Controlador Base:** Método `clientError` para manejo estandarizado de errores 4xx.
+- **Modelos:** Métodos `isExpired`, `isUsed`, `isValidCode` en `UserActivationToken` encapsulando lógica de dominio.
+- **Request Validation:** Validaciones numéricas y de longitud precisas en `ValidateAccountRequest`.
 
 ## [0.2.0] - 2025-12-24
 

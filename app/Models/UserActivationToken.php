@@ -15,13 +15,13 @@ class UserActivationToken extends Model
         'email',
         'token',
         'activation_code',
-        'expiread_at',
+        'expired_at',
         'validated_at',
         'used_at',
     ];   
 
     protected $casts = [
-        'expiread_at' => 'datetime',
+        'expired_at' => 'datetime',
         'validated_at' => 'datetime',
         'used_at' => 'datetime',
     ];
@@ -34,12 +34,17 @@ class UserActivationToken extends Model
     public function isExpired(): bool
     {
         $now = CarbonDate::now();
-        return $now->gt($this->expiread_at);
+        return $now->gt($this->expired_at);
     }
 
     public function isUsed(): bool
     {
         return $this->used_at !== null;
+    }
+
+    public function isValidated(): bool
+    {
+        return $this->validated_at !== null;
     }
 
     public function isValidCode(int $activationCode): bool

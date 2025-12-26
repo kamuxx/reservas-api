@@ -107,7 +107,7 @@ class User extends Authenticatable
                 'activation_code' => random_int(100000, 999999),
                 'email' => $this->email,
                 'uuid' => $this->uuid,
-                'expiread_at' => $expiread_at,
+                'expired_at' => $expiread_at,
             ]);
         }
     }
