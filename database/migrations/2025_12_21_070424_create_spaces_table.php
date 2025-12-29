@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('pricing_rule_id', 36)->index();
             $table->boolean('is_active')->default(true);
             $table->string('created_by', 36)->index();
-            $table->string('updated_by', 36)->index();
+            $table->string('updated_by', 36)->nullable()->default(null)->index();
 
             //foreings
             $table->foreign('status_id')->references('uuid')->on('status')->onDelete('cascade');

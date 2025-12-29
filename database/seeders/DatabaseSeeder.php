@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             StatusSeeder::class,
             UserAdminSeeder::class,
+            SpaceTypeSeeder::class,
+            PricingRuleSeeder::class,
         ]);
 
         

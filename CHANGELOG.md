@@ -7,6 +7,20 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [Unreleased]
 
+## [0.5.0] - 2025-12-29
+
+### 🚀 Añadido
+- **Gestión de Espacios (HU-005):** Implementación completa de la creación de espacios por administradores.
+    - Endpoints: `POST api/spaces`.
+    - Middleware: `RoleMiddleware` para proteger rutas administrativas.
+    - Modelos: `Space` con soporte para UUID y soft deletes (preparado).
+    - Testing: Suite completa `RegisterNewSpaceTest` cubriendo validaciones, seguridad y flujos de éxito.
+- **Seguridad:**
+    - Middleware `isAdmin` para restricción de acceso basado en roles.
+
+### ⚡ Optimizado
+- **Testing:** Mejora en `TestCase` para incluir seeders de `SpaceType` y `PricingRule`.
+
 ## [0.4.0] - 2025-12-28
 
 ### 🚀 Añadido

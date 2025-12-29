@@ -2,7 +2,7 @@
 
 ## Matriz Completa de Casos de Prueba
 
-### HU-001-UC-001: Registro de Nuevo Usuario
+### HU-001-UC-001: Registro de Nuevo Usuario ✅
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|
@@ -12,7 +12,7 @@
 | TP-HU001-004 | FA-003 | Campos requeridos faltantes | - | Omisiones de: name, email, phone, password | 1. Enviar POST /api/register con campos faltantes | HTTP 400 Bad Request<br>Mensaje indicando campos requeridos | Todos los campos son obligatorios |
 | TP-HU001-005 | FS-001 | Rate limiting registro | - | - | 1. Enviar >10 solicitudes POST /api/register en 1 minuto desde misma IP | Solicitudes 11+ reciben HTTP 429 Too Many Requests | Previene registros masivos |
 
-### HU-002-UC-001: Activación de Cuenta de Usuario
+### HU-002-UC-001: Activación de Cuenta de Usuario ✅
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|
@@ -23,7 +23,7 @@
 | TP-HU002-005 | FA-004 | Token no existe | - | token: "token-inexistente" | 1. Acceder con token inexistente | HTTP 404 Not Found | Valida existencia del token |
 | TP-HU002-006 | FS-001 | Fuerza bruta tokens | - | - | 1. Intentar >20 activaciones con tokens inválidos desde misma IP | HTTP 429 o bloqueo temporal<br>Registro en audit trail | Protección contra fuerza bruta |
 
-### HU-003-UC-001: Autenticación de Usuario (Login)
+### HU-003-UC-001: Autenticación de Usuario (Login) ✅
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|
@@ -33,7 +33,7 @@
 | TP-HU003-004 | FA-003 | Usuario no active | 1. Usuario con status pending/blocked | credenciales correctas para usuario inactivo | 1. Enviar POST /api/login | HTTP 401/403<br>Audit trail con status apropiado | Solo usuarios activos pueden login |
 | TP-HU003-005 | FS-001 | Fuerza bruta desde IP | - | - | 1. Realizar >5 intentos fallidos desde misma IP en 5 minutos | Intento 6+ recibe HTTP 429 o bloqueo<br>Registro en audit trail | Protección contra ataques |
 
-### HU-004-UC-001: Cierre de Sesión (Logout)
+### HU-004-UC-001: Cierre de Sesión (Logout) ✅
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|
@@ -42,7 +42,7 @@
 | TP-HU004-003 | FA-002 | Token sin claim jti | 1. JWT sin claim jti | JWT sin jti | 1. Enviar POST /api/logout | HTTP 400 Bad Request<br>Mensaje "Token sin identificador" | Requiere jti para blacklist |
 | TP-HU004-004 | FS-001 | Token ya en blacklist | 1. jti ya en blacklisted_tokens | JWT ya invalidado | 1. Enviar POST /api/logout con token ya en blacklist | HTTP 200 OK (idempotente) o 400 | No permite reutilización |
 
-### HU-005-UC-001: Creación de Espacio (Admin)
+### HU-005-UC-001: Creación de Espacio (Admin) ✅
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|

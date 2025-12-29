@@ -130,7 +130,8 @@ Actualmente el proyecto se encuentra en su **etapa inicial (0% implementado)**.
 
 *   ✅ **Estructura Base** - Configuración inicial del framework y rutas base.
 *   ✅ **HU-001 a HU-004** - Implementación del Sistema de Autenticación JWT (Registro, Activación, Login, Logout).
-*   ⏳ **HU-005 a HU-008** - Módulo de Gestión de Espacios y Categorías.
+*   ✅ **HU-005** - Módulo de Creación de Espacios (Admin).
+*   ⏳ **HU-006 a HU-008** - Modificación y Consulta de Espacios.
 *   ⏳ **HU-009 a HU-011** - Motor de Reservas Atómicas y Disponibilidad.
 *   ✅ **🧪 Suite de Tests** - Implementación de pruebas unitarias y de integración para Auth.
 *   ✅ **📚 Swagger UI** - Documentación interactiva de endpoints de Auth implementados.

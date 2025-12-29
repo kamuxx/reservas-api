@@ -2,10 +2,11 @@
 
 namespace Tests;
 
+use Database\Seeders\PricingRuleSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Database\Seeders\StatusSeeder;
 use Database\Seeders\RoleSeeder;
-
+use Database\Seeders\SpaceTypeSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 
@@ -29,6 +30,8 @@ abstract class TestCase extends BaseTestCase
         $this->artisan('migrate');
         $this->seed(StatusSeeder::class);
         $this->seed(RoleSeeder::class);
+        $this->seed(SpaceTypeSeeder::class);
+        $this->seed(PricingRuleSeeder::class);
     }
 
 }
