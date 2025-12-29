@@ -21,7 +21,7 @@ El objetivo principal es proporcionar una **API RESTful robusta, escalable y seg
 *   **Gestor de Dependencias:** Composer 2.x
 *   **Autenticación:** JWT (JSON Web Tokens)
 *   **Testing:** PHPUnit / Pest
-*   **Documentación:** Swagger / L5-Swagger
+*   **Documentación:** Swagger UI (OpenAPI 3.0)
 
 ---
 
@@ -93,6 +93,15 @@ php artisan serve
 ```
 La API estará disponible en `http://localhost:8000`.
 
+La API estará disponible en `http://localhost:8000`.
+
+### 8. Documentación de la API (Swagger)
+Para visualizar la documentación interactiva de los endpoints, asegúrate de que el servidor esté corriendo (Paso 7) y visita:
+
+> **URL:** `http://localhost:8000/api/docs`
+
+Esta interfaz te permitirá explorar los esquemas de datos y probar los endpoints directamente desde el navegador.
+
 ---
 
 ## 🏗 Funcionalidades del Backend (Dominio de Negocio)
@@ -119,12 +128,12 @@ La API estará disponible en `http://localhost:8000`.
 
 Actualmente el proyecto se encuentra en su **etapa inicial (0% implementado)**.
 
-*   🚧 **Estructura Base** - Configuración inicial del framework y rutas base.
-*   ⏳ **HU-001 a HU-004** - Implementación del Sistema de Autenticación JWT.
+*   ✅ **Estructura Base** - Configuración inicial del framework y rutas base.
+*   ✅ **HU-001 a HU-004** - Implementación del Sistema de Autenticación JWT (Registro, Activación, Login, Logout).
 *   ⏳ **HU-005 a HU-008** - Módulo de Gestión de Espacios y Categorías.
 *   ⏳ **HU-009 a HU-011** - Motor de Reservas Atómicas y Disponibilidad.
-*   ⏳ **🧪 Suite de Tests** - Implementación de pruebas unitarias y de integración.
-*   ⏳ **📚 Swagger UI** - Documentación interactiva de todos los endpoints.
+*   ✅ **🧪 Suite de Tests** - Implementación de pruebas unitarias y de integración para Auth.
+*   ✅ **📚 Swagger UI** - Documentación interactiva de endpoints de Auth implementados.
 *   ⏳ **🔒 RBAC** - Control de acceso basado en roles (Admin/Cliente).
 *   ⏳ **📊 Reportes** - Vistas SQL optimizadas para analítica de uso.
 

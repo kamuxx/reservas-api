@@ -26,11 +26,11 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => "admin",
-            'email' => "admin@admin.com",
-            'password' => Hash::make('Admin@123'), 
-            'phone' => "584165359897",           
-            'role_id' => Role::where('name', 'admin')->first()->uuid,
+            'name' => $this->faker->name(),
+            'email' => $this->faker->email(),
+            'password' => Hash::make('Tost@123'), 
+            'phone' => $this->faker->phoneNumber(),           
+            'role_id' => Role::where('name', 'user')->first()->uuid,
             'status_id' => Status::where('name', 'active')->first()->uuid,
         ];
     }

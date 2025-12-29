@@ -7,6 +7,30 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-12-28
+
+### 🚀 Añadido
+- **Autenticación Completa (HU-003, HU-004):** 
+    - Endpoints funcionales para Inicio de Sesión (`POST api/auth/login`) y Cierre de Sesión (`POST api/auth/logout`).
+    - Integración de **JWT (JSON Web Tokens)** mediante `tymon/jwt-auth` para manejo de sesiones seguras.
+- **Seguridad y Control de Acceso:**
+    - **Middleware `EnsureUserIsActive`:** Restricción de acceso que impide a usuarios con estatus `pending` utilizar endpoints protegidos.
+    - Configuración de guardianes (guards) api/sanctum y proveedores de autenticación en `config/auth.php`.
+- **Documentación Interactiva:**
+    - Implementación de **Swagger UI** accesible en `/api/docs`.
+    - Archivo de definición OpenAPI en `public/api-docs.yaml` actualizado con todas las rutas actuales.
+    - Vista dedicada `resources/views/swagger.blade.php`.
+- **Testing:**
+    - Nuevas suites de pruebas `LoginTest.php` y `LogoutTest.php` cubriendo casos de éxito, credenciales inválidas, usuarios inactivos y estructura de tokens.
+
+### ⚡ Optimizado
+- **Modelos y Fábricas:**
+    - Actualización de `UserFactory` para generar usuarios con estados y roles consistentes.
+    - Mejoras en el modelo `User` para integración con JWT Subject.
+- **Configuración:**
+    - Publicación y ajuste de configuración de JWT (`config/jwt.php`).
+
+
 ## [0.3.0] - 2025-12-26
 
 ### 🚀 Añadido

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('status_id', 36)->index();
             $table->foreign('role_id')->references('uuid')->on('roles')->onDelete('cascade')->comment('UUID DE LA TABLA ROLES');
             $table->foreign('status_id')->references('uuid')->on('status')->onDelete('cascade')->comment('UUID DE LA TABLA STATUS');
+            $table->timestamp('last_login_at')->nullable()->default(null);
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable()->default(null);
         });

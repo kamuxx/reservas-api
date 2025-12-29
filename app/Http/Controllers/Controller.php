@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use \Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthenticatedException;
 
 
 abstract class Controller
@@ -20,15 +22,19 @@ abstract class Controller
      * @param array|null $data Datos adicionales que se enviarán en la respuesta.
      * @param array|null $headers Cabeceras HTTP adicionales.
      * @param array|null $cookies Array de objetos de cookie o parámetros de cookie.
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
-    protected function success(int $statusCode, string $message, ?array $data = null, ?array $headers = null, ?array $cookies = null): JsonResponse
+    protected function success(int $statusCode, string $message = "", ?array $data = null, ?array $headers = null, ?array $cookies = null): JsonResponse|Response
     {
         $output = [];
         $output["status"] = "success";
         $output["message"] = $message;
         if (is_array($data) && !empty($data))
             $output["data"] = $data;
+
+        if ($statusCode == 204) {
+            return response()->noContent();
+        }
 
         $response = response()->json($output, $statusCode);
         if (is_array($headers) && !empty($headers))
@@ -75,7 +81,7 @@ abstract class Controller
             $error["file"] = $th->getFile();
         }
 
-         // Determinar prefijo
+        // Determinar prefijo
         $prefix = "GE"; // General Exception por defecto
         if ($th instanceof \PDOException || $th instanceof QueryException) {
             $prefix = "DE"; // Database Exception
@@ -106,6 +112,8 @@ abstract class Controller
 
         $code = $prefix . date('YmdHis');
         $statusCode = $e instanceof NotFoundHttpException ? 404 : 422;
+        if ($e instanceof UnauthenticatedException)
+            $statusCode = 401;
 
         $userMessage = $message . ", please notify the administrator the following error: " . $code;
 

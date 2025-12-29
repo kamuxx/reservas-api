@@ -18,10 +18,17 @@ class BaseRepository implements RepositoryContract
         return $modelClassName::create($data);   
     }
 
-    public static function getBy(string $modelClassName, array $filters): ?Model
+    public static function getBy(string $modelClassName, array $filters): ?array
     {
         if(!self::isModelValid($modelClassName)) throw new \Exception("El modelo debe ser una subclase de Model");
-        return $modelClassName::where($filters)->first();
+        return $modelClassName::where($filters)->get();
+    }
+
+    public static function getOneBy(string $modelClassName, array $filters): ?Model
+    {
+        if(!self::isModelValid($modelClassName)) throw new \Exception("El modelo debe ser una subclase de Model");
+        $record = $modelClassName::where($filters)->first();
+        return $record;
     }
 
     public static function update(string $modelClassName, array $filters, array $data): bool

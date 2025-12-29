@@ -9,6 +9,10 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::get('/docs', function () {
+    return view('swagger');
+});
+
 Route::get('/', function () {
     return response()->json(['message' => 'API is working: ' . app()->version()]);
 });
@@ -16,4 +20,14 @@ Route::get('/', function () {
 Route::group(["prefix" => "auth"], function () {
     Route::post("/register", [RegisterController::class, "register"]);
     Route::post("/activate", [AuthController::class, "activate"]);
+
+    Route::group(["middleware" => "api"], function () {
+        Route::post("/login", [AuthController::class, "login"])->name("login");
+    });
+
+    Route::group(["middleware" => "auth:api"], function () {
+        Route::post("/logout", [AuthController::class, "logout"])->name("logout");
+    });
 });
+
+

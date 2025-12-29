@@ -9,7 +9,7 @@ class TokenRepository extends BaseRepository
 {
     public static function getByToken(string $token): ?UserActivationToken
     {
-        $tokenActivation = parent::getBy(UserActivationToken::class, ["token" => $token]);
+        $tokenActivation = parent::getOneBy(UserActivationToken::class, ["token" => $token]);
         if(!$tokenActivation) return null;
         if(!$tokenActivation instanceof UserActivationToken) return null;
         return $tokenActivation;

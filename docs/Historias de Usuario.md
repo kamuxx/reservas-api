@@ -5,7 +5,8 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
 ---
 ## Dominio: Autenticación
 
-### HU-001: Registro de Nuevo Usuario
+### HU-001: Registro de Nuevo Usuario ![Estado: Completado](https://img.shields.io/badge/Estado-Completado-success)
+- **Estado de Desarrollo:** ✅ Implementado y Testeado (v0.1.0)
 - **Dominio funcional:** Autenticación
 - **Objetivo de negocio:** Permitir que nuevos clientes se registren en el sistema para que puedan realizar reservas.
 - **Alcance funcional:**
@@ -21,7 +22,8 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
     - `user.estado`: `pending` (estado final).
 - **Condición de completitud de la HU:** La HU está completa cuando el endpoint `POST /api/register` está implementado y todas las reglas de negocio son validadas por pruebas de integración.
 
-### HU-002: Activación de Cuenta de Usuario
+### HU-002: Activación de Cuenta de Usuario ![Estado: Completado](https://img.shields.io/badge/Estado-Completado-success)
+- **Estado de Desarrollo:** ✅ Implementado y Testeado (v0.3.0)
 - **Dominio funcional:** Autenticación
 - **Objetivo de negocio:** Verificar que el email proporcionado por el usuario es válido y le pertenece, como medida de seguridad.
 - **Alcance funcional:**
@@ -37,7 +39,8 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
     - `user.estado`: `pending` (inicial), `active` (final).
 - **Condición de completitud de la HU:** La HU está completa cuando el endpoint (ej. `GET /api/activate/{token}`) está implementado y valida correctamente los tokens.
 
-### HU-003: Autenticación de Usuario (Login)
+### HU-003: Autenticación de Usuario (Login) ![Estado: Completado](https://img.shields.io/badge/Estado-Completado-success)
+- **Estado de Desarrollo:** ✅ Implementado y Testeado (v0.4.0)
 - **Dominio funcional:** Autenticación
 - **Objetivo de negocio:** Permitir a los usuarios registrados y activos acceder al sistema.
 - **Alcance funcional:**
@@ -53,7 +56,8 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
     - `user.estado`: `active` (requerido).
 - **Condición de completitud de la HU:** La HU está completa cuando el endpoint `POST /api/login` está implementado y cumple todas las reglas.
 
-### HU-004: Cierre de Sesión (Logout)
+### HU-004: Cierre de Sesión (Logout) ![Estado: Completado](https://img.shields.io/badge/Estado-Completado-success)
+- **Estado de Desarrollo:** ✅ Implementado y Testeado (v0.4.0)
 - **Dominio funcional:** Autenticación
 - **Objetivo de negocio:** Permitir a un usuario invalidar su sesión actual de forma segura.
 - **Alcance funcional:**

@@ -5,6 +5,7 @@ namespace Repositories;
 use App\Models\Status;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class UserRepository extends BaseRepository
 {    
@@ -30,6 +31,11 @@ class UserRepository extends BaseRepository
     {
         $status = Status::where('name', 'active')->first();
         if(!$status) throw new \Exception("Error al activar el usuario");
-        return self::update(User::class, $filters, ["status_id" => $status->uuid]);
+        return self::updateUser($filters, ["status_id" => $status->uuid]);
+    }
+
+    public static function updateLastLoginAt(Model $user): bool
+    {
+        return self::updateUser(["uuid" => $user->uuid], ["last_login_at" => Carbon::now()]);
     }
 }

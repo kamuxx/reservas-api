@@ -2,21 +2,21 @@
 
 ## Tabla Resumen de Casos de Uso
 
-| Código | Nombre | HU Relacionada | Objetivo | Descripción |
-|--------|--------|----------------|----------|-------------|
-| HU-001-UC-001 | Registro de Nuevo Usuario | HU-001 | Permitir que nuevos clientes se registren en el sistema | El usuario proporciona sus datos para crear una cuenta con estado pendiente de activación (pending) |
-| HU-002-UC-001 | Activación de Cuenta de Usuario | HU-002 | Verificar la propiedad del email del usuario | El usuario activa su cuenta mediante un token de activación |
-| HU-003-UC-001 | Autenticación de Usuario (Login) | HU-003 | Permitir acceso al sistema a usuarios registrados y activos | El usuario ingresa sus credenciales para obtener un token JWT |
-| HU-004-UC-001 | Cierre de Sesión (Logout) | HU-004 | Invalidar de forma segura la sesión actual | El usuario cierra su sesión invalidando el JWT en el servidor |
-| HU-005-UC-001 | Creación de Espacio (Admin) | HU-005 | Permitir a administradores añadir nuevos espacios | Un administrador crea un nuevo registro en la entidad `spaces` |
-| HU-006-UC-001 | Modificación de Espacio (Admin) | HU-006 | Permitir a administradores actualizar información de espacios | Un administrador actualiza atributos de un espacio existente |
-| HU-007-UC-001 | Consulta de Listado de Espacios | HU-007 | Permitir visualizar espacios disponibles | Cualquier usuario (autenticado o no) lista espacios con filtros |
-| HU-007-UC-002 | Consulta de Detalle de Espacio | HU-007 | Ver información detallada de un espacio | Consulta individual de un espacio con reglas de autorización |
-| HU-008-UC-001 | Consulta de Disponibilidad de Espacio | HU-008 | Informar sobre horarios disponibles/ocupados | Usuario autenticado consulta bloques de tiempo para un espacio |
-| HU-009-UC-001 | Creación de Reserva con Validación Atómica | HU-009 | Formalizar reserva de espacio verificando disponibilidad | Cliente crea reserva con validación atómica de solapamiento |
-| HU-010-UC-001 | Cancelación de Reserva por Cliente | HU-010 | Permitir anulación de reservas propias | Cliente cancela una reserva confirmada de su propiedad |
-| HU-010-UC-002 | Cancelación de Reserva por Administrador | HU-010 | Permitir anulación de cualquier reserva | Administrador cancela cualquier reserva confirmada |
-| HU-011-UC-001 | Consulta de Espacios Disponibles por Filtros | HU-011 | Listar espacios con disponibilidad garantizada | Listado público de espacios disponibles para fecha específica |
+| Código | Nombre | HU Relacionada | Estado | Objetivo | Descripción |
+|--------|--------|----------------|--------|----------|-------------|
+| HU-001-UC-001 | Registro de Nuevo Usuario | HU-001 | ✅ Completado | Permitir que nuevos clientes se registren en el sistema | El usuario proporciona sus datos para crear una cuenta con estado pendiente de activación (pending) |
+| HU-002-UC-001 | Activación de Cuenta de Usuario | HU-002 | ✅ Completado | Verificar la propiedad del email del usuario | El usuario activa su cuenta mediante un token de activación |
+| HU-003-UC-001 | Autenticación de Usuario (Login) | HU-003 | ✅ Completado | Permitir acceso al sistema a usuarios registrados y activos | El usuario ingresa sus credenciales para obtener un token JWT |
+| HU-004-UC-001 | Cierre de Sesión (Logout) | HU-004 | ✅ Completado | Invalidar de forma segura la sesión actual | El usuario cierra su sesión invalidando el JWT en el servidor |
+| HU-005-UC-001 | Creación de Espacio (Admin) | HU-005 | ⏳ Pendiente | Permitir a administradores añadir nuevos espacios | Un administrador crea un nuevo registro en la entidad `spaces` |
+| HU-006-UC-001 | Modificación de Espacio (Admin) | HU-006 | ⏳ Pendiente | Permitir a administradores actualizar información de espacios | Un administrador actualiza atributos de un espacio existente |
+| HU-007-UC-001 | Consulta de Listado de Espacios | HU-007 | ⏳ Pendiente | Permitir visualizar espacios disponibles | Cualquier usuario (autenticado o no) lista espacios con filtros |
+| HU-007-UC-002 | Consulta de Detalle de Espacio | HU-007 | ⏳ Pendiente | Ver información detallada de un espacio | Consulta individual de un espacio con reglas de autorización |
+| HU-008-UC-001 | Consulta de Disponibilidad de Espacio | HU-008 | ⏳ Pendiente | Informar sobre horarios disponibles/ocupados | Usuario autenticado consulta bloques de tiempo para un espacio |
+| HU-009-UC-001 | Creación de Reserva con Validación Atómica | HU-009 | ⏳ Pendiente | Formalizar reserva de espacio verificando disponibilidad | Cliente crea reserva con validación atómica de solapamiento |
+| HU-010-UC-001 | Cancelación de Reserva por Cliente | HU-010 | ⏳ Pendiente | Permitir anulación de reservas propias | Cliente cancela una reserva confirmada de su propiedad |
+| HU-010-UC-002 | Cancelación de Reserva por Administrador | HU-010 | ⏳ Pendiente | Permitir anulación de cualquier reserva | Administrador cancela cualquier reserva confirmada |
+| HU-011-UC-001 | Consulta de Espacios Disponibles por Filtros | HU-011 | ⏳ Pendiente | Listar espacios con disponibilidad garantizada | Listado público de espacios disponibles para fecha específica |
 
 ---
 

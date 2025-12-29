@@ -1,0 +1,217 @@
+openapi: 3.0.0
+info:
+  title: Reservas API
+  description: API para gestión de reservas y usuarios.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Servidor local de desarrollo
+paths:
+  /:
+    get:
+      summary: Verificar estado de la API
+      responses:
+        '200':
+          description: API operativa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "API is working: 10.x.x"
+
+  /api/user:
+    get:
+      summary: Obtener usuario autenticado
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Datos del usuario autenticado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  phone:
+                    type: string
+                  role:
+                    type: string
+                    description: Rol del usuario (USER, ADMIN, etc.)
+  
+  /api/auth/register:
+    post:
+      summary: Registrar nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - password_confirmation
+                - phone
+              properties:
+                name:
+                  type: string
+                  example: "Juan Perez"
+                email:
+                  type: string
+                  format: email
+                  example: "juan@example.com"
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  description: "Debe contener mayúscula, minúscula, número y caracter especial."
+                  example: "Password123!"
+                password_confirmation:
+                  type: string
+                  format: password
+                  example: "Password123!"
+                phone:
+                  type: string
+                  example: "+584121234567"
+      responses:
+        '201':
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "User was created successfully"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      email:
+                        type: string
+        '422':
+          description: Error de validación
+        '500':
+          description: Error del servidor
+
+  /api/auth/activate:
+    post:
+      summary: Activar cuenta de usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - activation_code
+              properties:
+                token:
+                  type: string
+                  description: Token recibido por correo o generado al registro
+                activation_code:
+                  type: string
+                  description: Código de 6 dígitos
+                  example: "123456"
+      responses:
+        '200':
+          description: Cuenta activada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Cuenta activada exitosamente"
+        '404':
+          description: Token inválido o usuario no encontrado
+        '422':
+          description: Código incorrecto o error de validación
+
+  /api/auth/login:
+    post:
+      summary: Iniciar sesión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "juan@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "Password123!"
+      responses:
+        '200':
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Login exitoso"
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                      token_type:
+                        type: string
+                        example: "bearer"
+                      expires_in:
+                        type: integer
+        '401':
+          description: Credenciales inválidas
+
+  /api/auth/logout:
+    post:
+      summary: Cerrar sesión
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Cierre de sesión exitoso (Sin contenido)
+        '500':
+          description: Error al procesar la solicitud
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
