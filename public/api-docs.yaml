@@ -33,19 +33,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  name:
-                    type: string
-                  email:
-                    type: string
-                  phone:
-                    type: string
-                  role:
-                    type: string
-                    description: Rol del usuario (USER, ADMIN, etc.)
+                $ref: '#/components/schemas/User'
   
   /api/auth/register:
     post:
@@ -55,34 +43,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - name
-                - email
-                - password
-                - password_confirmation
-                - phone
-              properties:
-                name:
-                  type: string
-                  example: "Juan Perez"
-                email:
-                  type: string
-                  format: email
-                  example: "juan@example.com"
-                password:
-                  type: string
-                  format: password
-                  minLength: 8
-                  description: "Debe contener mayúscula, minúscula, número y caracter especial."
-                  example: "Password123!"
-                password_confirmation:
-                  type: string
-                  format: password
-                  example: "Password123!"
-                phone:
-                  type: string
-                  example: "+584121234567"
+              $ref: '#/components/schemas/RegisterRequest'
       responses:
         '201':
           description: Usuario creado exitosamente
@@ -98,14 +59,7 @@ paths:
                     type: string
                     example: "User was created successfully"
                   data:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      name:
-                        type: string
-                      email:
-                        type: string
+                    $ref: '#/components/schemas/User'
         '422':
           description: Error de validación
         '500':
@@ -119,18 +73,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - token
-                - activation_code
-              properties:
-                token:
-                  type: string
-                  description: Token recibido por correo o generado al registro
-                activation_code:
-                  type: string
-                  description: Código de 6 dígitos
-                  example: "123456"
+              $ref: '#/components/schemas/ActivateRequest'
       responses:
         '200':
           description: Cuenta activada exitosamente
@@ -158,19 +101,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - email
-                - password
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: "juan@example.com"
-                password:
-                  type: string
-                  format: password
-                  example: "Password123!"
+              $ref: '#/components/schemas/LoginRequest'
       responses:
         '200':
           description: Login exitoso
@@ -186,15 +117,7 @@ paths:
                     type: string
                     example: "Login exitoso"
                   data:
-                    type: object
-                    properties:
-                      access_token:
-                        type: string
-                      token_type:
-                        type: string
-                        example: "bearer"
-                      expires_in:
-                        type: integer
+                    $ref: '#/components/schemas/LoginResponse'
         '401':
           description: Credenciales inválidas
 
@@ -209,9 +132,267 @@ paths:
         '500':
           description: Error al procesar la solicitud
 
+  /api/spaces:
+    post:
+      summary: Registrar un nuevo espacio (Admin)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterSpaceRequest'
+      responses:
+        '201':
+          description: Espacio creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Espacio creado exitosamente"
+                  data:
+                    $ref: '#/components/schemas/Space'
+        '401':
+          description: No autenticado
+        '403':
+          description: No autorizado (Solo administradores)
+        '422':
+          description: Error de validación
+
+  /api/spaces/{uuid}:
+    put:
+      summary: Actualizar un espacio existente (Admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: UUID del espacio a actualizar
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSpaceRequest'
+      responses:
+        '200':
+          description: Espacio actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Espacio actualizado exitosamente"
+        '401':
+          description: No autenticado
+        '403':
+          description: No autorizado (Solo administradores)
+        '404':
+          description: Espacio no encontrado
+        '422':
+          description: Error de validación
+
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        role:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    RegisterRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - password_confirmation
+        - phone
+      properties:
+        name:
+          type: string
+          example: "Juan Perez"
+        email:
+          type: string
+          format: email
+          example: "juan@example.com"
+        password:
+          type: string
+          format: password
+          minLength: 8
+          description: "Debe contener mayúscula, minúscula, número y caracter especial."
+          example: "Password123!"
+        password_confirmation:
+          type: string
+          format: password
+          example: "Password123!"
+        phone:
+          type: string
+          example: "+584121234567"
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "juan@example.com"
+        password:
+          type: string
+          format: password
+          example: "Password123!"
+
+    LoginResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          example: "bearer"
+        expires_in:
+          type: integer
+
+    ActivateRequest:
+      type: object
+      required:
+        - token
+        - activation_code
+      properties:
+        token:
+          type: string
+          description: Token recibido por correo o generado al registro
+        activation_code:
+          type: string
+          description: Código de 6 dígitos
+          example: "123456"
+
+    Space:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        capacity:
+          type: integer
+        spaces_type_id:
+          type: string
+          format: uuid
+        status_id:
+          type: string
+          format: uuid
+        pricing_rule_id:
+          type: string
+          format: uuid
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    RegisterSpaceRequest:
+      type: object
+      required:
+        - name
+        - capacity
+        - spaces_type_id
+        - status_id
+        - pricing_rule_id
+      properties:
+        name:
+          type: string
+          example: "Sala de Conferencias A"
+        description:
+          type: string
+          example: "Sala equipada con proyector y sonido"
+        capacity:
+          type: integer
+          example: 20
+        spaces_type_id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        status_id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440001"
+        pricing_rule_id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440002"
+        is_active:
+          type: boolean
+          example: true
+
+    UpdateSpaceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Sala de Conferencias B"
+        description:
+          type: string
+          example: "Sala actualizada con aire acondicionado"
+        capacity:
+          type: integer
+          example: 25
+        spaces_type_id:
+          type: string
+          format: uuid
+        status_id:
+          type: string
+          format: uuid
+        pricing_rule_id:
+          type: string
+          format: uuid
+        is_active:
+          type: boolean
