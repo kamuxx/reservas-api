@@ -59,7 +59,9 @@ class User extends Authenticatable implements JWTSubject
     {
         parent::booted();
         static::creating(function ($user) {
-            $user->uuid = Str::uuid()->toString();
+            if (!$user->uuid) {
+                $user->uuid = Str::uuid()->toString();
+            }
             $user->assingInitialRoleAndStatus();
         });
 

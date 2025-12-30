@@ -16,7 +16,9 @@ class Role extends Model
         parent::boot();
 
         static::creating(function ($role) {
-            $role->uuid = (string) Str::uuid()->toString();
+            if (!$role->uuid) {
+                $role->uuid = (string) Str::uuid()->toString();
+            }
         });
     }
 

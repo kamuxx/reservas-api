@@ -34,7 +34,9 @@ class Space extends Model
         parent::booted();
 
         static::creating(function ($space) {
-            $space->uuid = Str::uuid()->toString();
+            if (!$space->uuid) {
+                $space->uuid = Str::uuid()->toString();
+            }
         });
     }
     public function getRouteKeyName()

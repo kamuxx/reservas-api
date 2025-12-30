@@ -19,7 +19,9 @@ class Status extends Model
         parent::boot();
 
         self::creating(function ($model) {
-            $model->uuid = (string) Str::uuid();
+            if (!$model->uuid) {
+                $model->uuid = (string) Str::uuid();
+            }
         });
     }
 }
