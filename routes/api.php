@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SpaceController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ReservationController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -33,11 +34,21 @@ Route::group(["prefix" => "auth"], function () {
 
 Route::group(["prefix" => "spaces"], function () {
     Route::get("", [SpaceController::class, "index"])->name("spaces.index");
+    Route::get("/available", [SpaceController::class, "available"])->name("spaces.available");
     Route::get("/{id}", [SpaceController::class, "show"])->name("spaces.show");
+
+    Route::group(["middleware" => ["auth:api"]], function () {
+        Route::get("/{id}/availability", [SpaceController::class, "availability"])->name("spaces.availability");
+    });
 
     Route::group(["middleware" => ["auth:api", "isAdmin"]], function () {
         Route::post("", [SpaceController::class, "store"])->name("spaces.store");
         Route::put("/{space}", [SpaceController::class, "update"])->name("spaces.update");
         Route::delete("/{id}", [SpaceController::class, "destroy"])->name("spaces.destroy");
     });
+});
+
+Route::middleware('auth:api')->prefix('reservations')->group(function () {
+    Route::post("", [ReservationController::class, "store"])->name("reservations.store");
+    Route::delete("/{id}", [ReservationController::class, "destroy"])->name("reservations.destroy");
 });

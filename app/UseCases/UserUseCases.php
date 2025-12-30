@@ -75,27 +75,58 @@ class UserUseCases
         }
     }
 
-    public function login(array $credentials): string
+    public function login(array $credentials, ?string $ipAddress = null, ?string $userAgent = null): string
     {
         ["email" => $email, "password" => $password] = $credentials;
         $user = $this->userRepository->getOneBy(User::class, ["email" => $email]);
 
-        if (!$user)
-            throw new NotFoundHttpException("No se encontro el usuario");
-        $user->load("role", "status");
+        try {
+            if (!$user) {
+                $this->logLoginAttempt(null, $email, $ipAddress, $userAgent, 'failed', 'Usuario no encontrado');
+                throw new UnprocessableEntityHttpException("Las credenciales son incorrectas");
+            }
+            
+            $user->load("role", "status");
 
-        if (!$user->isActive())
-            throw new UnprocessableEntityHttpException("El usuario no esta activo");
+            if (!$user->isActive()) {
+                $this->logLoginAttempt($user->uuid, $email, $ipAddress, $userAgent, 'failed', 'Usuario no activo');
+                throw new UnprocessableEntityHttpException("Las credenciales son incorrectas");
+            }
 
-        if (!$user->isValidPassword($password))
-            throw new UnprocessableEntityHttpException("La contraseña no es valida");
+            if (!$user->isValidPassword($password)) {
+                $this->logLoginAttempt($user->uuid, $email, $ipAddress, $userAgent, 'failed', 'Contraseña inválida');
+                throw new UnprocessableEntityHttpException("Las credenciales son incorrectas");
+            }
 
-        if (!$token = auth('api')->attempt($credentials))
-            throw new AuthenticationException("Las credenciales son incorrectas");
+            if (!$token = auth('api')->attempt($credentials)) {
+                $this->logLoginAttempt($user->uuid, $email, $ipAddress, $userAgent, 'failed', 'Credenciales incorrectas');
+                throw new UnprocessableEntityHttpException("Las credenciales son incorrectas");
+            }
 
-        $this->userRepository::updateLastLoginAt($user);
+            $this->userRepository::updateLastLoginAt($user);
+            $this->logLoginAttempt($user->uuid, $email, $ipAddress, $userAgent, 'success');
 
-        return $token;
+            return $token;
+        } catch (Throwable $e) {
+            if (!($e instanceof UnprocessableEntityHttpException)) {
+                $this->logLoginAttempt($user ? $user->uuid : null, $email, $ipAddress, $userAgent, 'failed', $e->getMessage());
+            }
+            throw $e;
+        }
+    }
+
+    private function logLoginAttempt(?string $userUuid, string $email, ?string $ipAddress, ?string $userAgent, string $status, ?string $reason = null): void
+    {
+        \Illuminate\Support\Facades\DB::table('login_audit_trails')->insert([
+            'user_uuid' => $userUuid,
+            'email_attempt' => $email,
+            'ip_address' => $ipAddress,
+            'user_agent' => $userAgent,
+            'status' => $status,
+            'failure_reason' => $reason,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     public function logout(): bool

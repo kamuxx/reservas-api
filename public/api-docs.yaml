@@ -118,8 +118,19 @@ paths:
                     example: "Login exitoso"
                   data:
                     $ref: '#/components/schemas/LoginResponse'
-        '401':
-          description: Credenciales inválidas
+        '422':
+          description: Las credenciales son incorrectas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Las credenciales son incorrectas"
 
   /api/auth/logout:
     post:
@@ -278,6 +289,180 @@ paths:
           description: Espacio no encontrado
         '422':
           description: Error de validación
+
+  /api/spaces/{uuid}/availability:
+    get:
+      summary: Consultar disponibilidad de un espacio (HU-008)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: UUID del espacio
+          schema:
+            type: string
+            format: uuid
+        - name: start_date
+          in: query
+          required: true
+          description: Fecha de inicio (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          required: true
+          description: Fecha de fin (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Disponibilidad del espacio obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Disponibilidad del espacio obtenida exitosamente"
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        event_date:
+                          type: string
+                          format: date
+                        start_time:
+                          type: string
+                          example: "10:00:00"
+                        end_time:
+                          type: string
+                          example: "12:00:00"
+        '401':
+          description: No autenticado
+        '404':
+          description: Espacio no encontrado
+        '422':
+          description: Error de validación (Fechas inválidas)
+
+  /api/spaces/available:
+    get:
+      summary: Consultar espacios disponibles por filtros (HU-011)
+      parameters:
+        - name: fecha_deseada
+          in: query
+          required: true
+          description: Fecha para la cual se busca disponibilidad (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+        - name: space_type_id
+          in: query
+          description: UUID del tipo de espacio para filtrar
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Espacios disponibles obtenidos exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Espacios disponibles obtenidos exitosamente"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Space'
+        '400':
+          description: Petición inválida (Falta fecha_deseada)
+        '422':
+          description: Error de validación
+
+  /api/reservations:
+    post:
+      summary: Crear una nueva reserva (HU-009)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReservationRequest'
+      responses:
+        '201':
+          description: Reserva creada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Reserva creada exitosamente"
+                  data:
+                    $ref: '#/components/schemas/Reservation'
+        '401':
+          description: No autenticado
+        '409':
+          description: Conflicto - El espacio ya está reservado en ese horario
+        '422':
+          description: Error de validación
+
+  /api/reservations/{uuid}:
+    delete:
+      summary: Cancelar una reserva (HU-010)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: UUID de la reserva a cancelar
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Reserva cancelada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Reserva cancelada exitosamente"
+                  data:
+                    $ref: '#/components/schemas/Reservation'
+        '401':
+          description: No autenticado
+        '403':
+          description: No autorizado (No es dueño de la reserva o no es admin)
+        '404':
+          description: Reserva no encontrada
+        '422':
+          description: Error - Solo se pueden cancelar reservas confirmadas
 
 components:
   securitySchemes:
@@ -487,6 +672,76 @@ components:
         is_active:
           type: boolean
           example: true
+
+    Reservation:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        reserved_by:
+          type: string
+          format: uuid
+        space_id:
+          type: string
+          format: uuid
+        status_id:
+          type: string
+          format: uuid
+        event_name:
+          type: string
+        event_description:
+          type: string
+          nullable: true
+        event_date:
+          type: string
+          format: date
+        start_time:
+          type: string
+        end_time:
+          type: string
+        event_price:
+          type: number
+          format: float
+        pricing_rule_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateReservationRequest:
+      type: object
+      required:
+        - space_id
+        - event_name
+        - event_date
+        - start_time
+        - end_time
+      properties:
+        space_id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        event_name:
+          type: string
+          example: "Reunión de Equipo"
+        event_description:
+          type: string
+          example: "Planificación del sprint"
+        event_date:
+          type: string
+          format: date
+          example: "2026-01-15"
+        start_time:
+          type: string
+          example: "09:00"
+        end_time:
+          type: string
+          example: "11:00"
 
     UpdateSpaceRequest:
       type: object

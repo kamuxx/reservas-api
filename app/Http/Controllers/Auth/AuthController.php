@@ -9,6 +9,7 @@ use App\Http\Requests\Auth\ValidateAccountRequest;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthenticatedException;
 
@@ -36,10 +37,14 @@ class AuthController extends Controller
     public function login(LoginRequest $request){
         try {
             $credentials = $request->only("email", "password");
-            $token = $this->userUseCases->login($credentials);
+            $token = $this->userUseCases->login(
+                $credentials,
+                $request->ip(),
+                $request->userAgent()
+            );
             return $this->respondWithToken($token);
         } 
-        catch (UnauthenticatedException|NotFoundHttpException|UnprocessableEntityHttpException $e) {
+        catch (AuthenticationException|NotFoundHttpException|UnprocessableEntityHttpException $e) {
             $message = "Error al iniciar sesión: " . $e->getMessage();     
             return $this->clientError($e, $message);
         }

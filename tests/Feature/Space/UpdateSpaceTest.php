@@ -15,6 +15,7 @@ use Tests\TestCase;
 
 class UpdateSpaceTest extends TestCase
 {
+    use RefreshDatabase;
 
     const LOGIN_ROUTE = '/api/auth/login';
     const SPACE_UPDATE_ROUTE = '/api/spaces/{uuid}';
@@ -113,7 +114,7 @@ class UpdateSpaceTest extends TestCase
 
         $space = Space::create($spaceData);
         $spaceData = [
-            'name' => 'Space 1',
+            'name' => 'Space 2',
             'description' => 'Description 1',
             'capacity' => rand(1, 100),
             'spaces_type_id' => $spaceType->uuid,

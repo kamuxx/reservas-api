@@ -44,16 +44,16 @@ class Space extends Model
 
     public function spaceType()
     {
-        return $this->belongsTo(SpaceType::class, 'spaces_type_id');
+        return $this->belongsTo(SpaceType::class, 'spaces_type_id', 'uuid');
     }
 
     public function status()
     {
-        return $this->belongsTo(Status::class, 'status_id');
+        return $this->belongsTo(Status::class, 'status_id', 'uuid');
     }
 
     public function pricingRule()
     {
-        return $this->belongsTo(PricingRule::class, 'pricing_rule_id');
+        return $this->belongsTo(PricingRule::class, 'pricing_rule_id', 'uuid');
     }
 }

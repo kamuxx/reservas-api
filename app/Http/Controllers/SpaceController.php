@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Space\RegisterSpaceRequest;
 use App\Http\Requests\Space\UpdateSpaceRequest;
 use App\Http\Requests\Space\ListSpacesRequest;
+use App\Http\Requests\Space\CheckAvailabilityRequest;
 use App\Models\Space;
 use Illuminate\Support\Facades\DB;
 use UseCases\SpaceUseCases;
+
+use App\Http\Requests\Space\ListAvailableSpacesRequest;
 
 class SpaceController extends Controller
 {
@@ -24,6 +27,16 @@ class SpaceController extends Controller
             return $this->success(200, "Listado de espacios obtenido exitosamente", $spaces->toArray());
         } catch (\Throwable $th) {
             return $this->serverError($th, "Error al obtener el listado de espacios");
+        }
+    }
+
+    public function available(ListAvailableSpacesRequest $request)
+    {
+        try {
+            $spaces = $this->spaceUseCases->getAvailableSpaces($request->validated());
+            return $this->success(200, "Espacios disponibles obtenidos exitosamente", $spaces->toArray());
+        } catch (\Throwable $th) {
+            return $this->serverError($th, "Error al obtener los espacios disponibles");
         }
     }
 
@@ -65,6 +78,26 @@ class SpaceController extends Controller
             return $this->success(200, "Detalle del espacio obtenido exitosamente", $space->toArray());
         } catch (\Throwable $th) {
             return $this->serverError($th, "Error al obtener el detalle del espacio");
+        }
+    }
+
+    public function availability(CheckAvailabilityRequest $request, string $id)
+    {
+        try {
+            $user = auth('api')->user();
+            $isAdmin = $user && $user->role && $user->role->name === 'admin';
+            
+            $space = $this->spaceUseCases->find($id, $isAdmin);
+            
+            if (!$space) {
+                return $this->error(404, "Espacio no encontrado", null);
+            }
+            
+            $availability = $this->spaceUseCases->checkAvailability($id, $request->validated());
+            
+            return $this->success(200, "Disponibilidad del espacio obtenida exitosamente", $availability);
+        } catch (\Throwable $th) {
+            return $this->serverError($th, "Error al obtener la disponibilidad del espacio");
         }
     }
 }

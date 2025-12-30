@@ -105,7 +105,8 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
     - `space.is_active`: `true`, `false`.
 - **Condición de completitud de la HU:** La HU está completa cuando los endpoints `PUT /api/spaces/{id}` y `PATCH /api/spaces/{id}` están implementados.
 
-### HU-007: Consulta de Espacios
+### HU-007: Consulta de Espacios ![Estado: Completado](https://img.shields.io/badge/Estado-Completado-success)
+- **Estado de Desarrollo:** ✅ Implementado y Testeado (v0.7.0)
 - **Dominio funcional:** Espacios
 - **Objetivo de negocio:** Permitir a cualquier usuario (autenticado o no) ver los espacios disponibles.
 - **Alcance funcional:**
@@ -121,7 +122,8 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
     - `space.is_active`: `true`, `false`.
 - **Condición de completitud de la HU:** La HU está completa cuando los endpoints `GET /api/spaces` y `GET /api/spaces/{id}` están implementados y respetan las reglas de autorización.
 
-### HU-008: Consulta de Disponibilidad de un Espacio
+### HU-008: Consulta de Disponibilidad de un Espacio ![Estado: Completado](https://img.shields.io/badge/Estado-Completado-success)
+- **Estado de Desarrollo:** ✅ Implementado y Testeado (v0.8.0)
 - **Dominio funcional:** Espacios
 - **Objetivo de negocio:** Informar a los usuarios sobre los horarios en que un espacio está libre para ser reservado.
 - **Alcance funcional:**
@@ -136,7 +138,8 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
 ---
 ## Dominio: Reservas
 
-### HU-009: Creación de una Reserva
+### HU-009: Creación de una Reserva ![Estado: Completado](https://img.shields.io/badge/Estado-Completado-success)
+- **Estado de Desarrollo:** ✅ Implementado y Testeado (v1.0.0)
 - **Dominio funcional:** Reservas
 - **Objetivo de negocio:** Permitir a un cliente formalizar la reserva de un espacio que ha sido verificado como disponible.
 - **Alcance funcional:**
@@ -155,7 +158,8 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
     - `space.is_active`: `true` (requerido).
 - **Condición de completitud de la HU:** La HU está completa cuando el endpoint `POST /api/reservations` está implementado con la validación de solapamiento de horarios y las reglas de negocio especificadas.
 
-### HU-010: Cancelación de una Reserva
+### HU-010: Cancelación de una Reserva ![Estado: Completado](https://img.shields.io/badge/Estado-Completado-success)
+- **Estado de Desarrollo:** ✅ Implementado y Testeado (v1.0.0)
 - **Dominio funcional:** Reservas
 - **Objetivo de negocio:** Permitir a un cliente o administrador anular una reserva existente.
 - **Alcance funcional:**
@@ -170,7 +174,8 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
     - `reservation.status`: `confirmada` (inicial), `cancelada` (final).
 - **Condición de completitud de la HU:** La HU está completa cuando el endpoint de cancelación está implementado y respeta las reglas de propiedad y estado.
 
-### HU-011: Consulta de Espacios Disponibles por Filtros
+### HU-011: Consulta de Espacios Disponibles por Filtros ![Estado: Completado](https://img.shields.io/badge/Estado-Completado-success)
+- **Estado de Desarrollo:** ✅ Implementado y Testeado (v0.9.0)
 - **Dominio funcional:** Espacios
 - **Objetivo de negocio:** Proveer a los clientes un listado determinista de espacios que tienen disponibilidad garantizada para una fecha y tipo de espacio específicos.
 - **Alcance funcional:**

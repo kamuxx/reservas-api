@@ -93,7 +93,7 @@ class LoginTest extends TestCase
         $response->assertStatus(422);
         $content = $response->json();
         $this->assertArrayHasKey('message', $content);
-        $this->assertStringContainsString('La contraseña debe tener', $content['message']);
+        $this->assertStringContainsString('Las credenciales son incorrectas', $content['message']);
     }
 
     public function test_login_failed_by_wrong_password(): void
@@ -101,11 +101,13 @@ class LoginTest extends TestCase
         $user = User::factory()->create();
         $response = $this->postJson('/api/auth/login', [
             'email' => $user->email,
-            'password' => 'WrongP@ssw0rd!',
+            'password' => 'WrongPassword123!',
         ]);
 
-        // Current implementation validation throws 422 for isValidPassword check
         $response->assertStatus(422);
+        $content = $response->json();
+        $this->assertArrayHasKey('message', $content);
+        $this->assertStringContainsString('Las credenciales son incorrectas', $content['message']);
     }
 
     public function test_login_failed_by_inactive_user(): void
@@ -113,7 +115,7 @@ class LoginTest extends TestCase
         // Create a user with pending status
         $pendingStatus = \App\Models\Status::where('name', 'pending')->first();
         $user = User::factory()->create([
-            'status_id' => $pendingStatus->uuid
+            'status_id' => $pendingStatus->uuid,
         ]);
 
         $response = $this->postJson('/api/auth/login', [
@@ -123,14 +125,15 @@ class LoginTest extends TestCase
 
         $response->assertStatus(422);
         $content = $response->json();
-        $this->assertStringContainsString('El usuario no esta activo', $content['message']);
+        $this->assertStringContainsString('Las credenciales son incorrectas', $content['message']);
     }
+
     public function test_login_failed_by_blocked_user(): void
     {
-        // Create a user with pending status
+        // Create a user with blocked status
         $blockedStatus = \App\Models\Status::where('name', 'blocked')->first();
         $user = User::factory()->create([
-            'status_id' => $blockedStatus->uuid
+            'status_id' => $blockedStatus->uuid,
         ]);
 
         $response = $this->postJson('/api/auth/login', [
@@ -140,6 +143,6 @@ class LoginTest extends TestCase
 
         $response->assertStatus(422);
         $content = $response->json();
-        $this->assertStringContainsString('El usuario no esta activo', $content['message']);
+        $this->assertStringContainsString('Las credenciales son incorrectas', $content['message']);
     }
 }

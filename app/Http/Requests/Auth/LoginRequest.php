@@ -21,10 +21,9 @@ class LoginRequest extends FormRequest
      */
     public function rules(): array
     {
-        $passRegex = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
         return [
-            "email" => "required|email|exists:users,email",
-            "password" => "required|min:8|regex:" . $passRegex,
+            "email" => "required|email",
+            "password" => "required",
         ];
     }
 
@@ -33,10 +32,7 @@ class LoginRequest extends FormRequest
         return [
             "email.required" => "El correo electrónico es requerido",
             "email.email" => "El correo electrónico no es válido",
-            "email.exists" => "Las credenciales son incorrectas",
             "password.required" => "La contraseña es requerida",
-            "password.min" => "La contraseña debe tener al menos 8 caracteres",
-            "password.regex" => "Las credenciales son incorrectas",
         ];
     }
 

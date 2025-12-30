@@ -7,6 +7,52 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [Unreleased]
 
+## [1.0.0] - 2025-12-30
+
+### 🚀 Añadido
+- **Lanzamiento de Versión Final:** Integración de todos los módulos del sistema de reservas.
+- **Auditoría de Inicio de Sesión (HU-003):**
+    - Lógica: Registro automático de intentos de inicio de sesión en `login_audit_trails`.
+    - Información: Se registra `user_uuid` (si aplica), `email_attempt`, `ip_address`, `user_agent`, `status` (success/failed) y `failure_reason`.
+- **Gestión de Reservas y Disponibilidad (HU-009, HU-010, HU-011):**
+    - Implementación completa de creación atómica, cancelación lógica y búsqueda avanzada de espacios.
+
+### 🛡️ Seguridad
+- **Estandarización de Errores (HU-003):** Uso de mensajes genéricos ("Las credenciales son incorrectas") en login para prevenir enumeración.
+- **Control de Acceso Robusto:** Validación de estados de usuario (bloqueado/inactivo) y roles en todos los niveles.
+
+### 🧪 Testing
+- **100% Cobertura de HUs:** Suite de 91 pruebas pasando exitosamente (316 aserciones).
+- **LoginAuditTrailTest:** Verificación de registros de auditoría de seguridad.
+
+## [0.9.0] - 2025-12-30
+
+### 🚀 Añadido
+- **Gestión de Reservas - Creación Atómica (HU-009):**
+    - Endpoint: `POST /api/reservations`.
+    - Lógica: Validación atómica de disponibilidad con bloqueo de filas (`lockForUpdate`).
+- **Gestión de Reservas - Cancelación (HU-010):**
+    - Endpoint: `DELETE /api/reservations/{uuid}`.
+    - Auditoría: Registro de traza en `entity_audit_trails`.
+- **Gestión de Espacios - Búsqueda de Disponibilidad (HU-011):**
+    - Endpoint: `GET /api/spaces/available`.
+
+### 🧪 Testing
+- Suites `CreateReservationTest`, `CancelReservationTest` y `ListAvailableSpacesTest`.
+
+## [0.8.0] - 2025-12-30
+
+### 🚀 Añadido
+- **Gestión de Espacios - Disponibilidad (HU-008):** Implementación de consulta de bloques horarios ocupados.
+    - Endpoints: `GET /api/spaces/{uuid}/availability`.
+    - Lógica: Consulta de reservas confirmadas en un rango de fechas.
+    - Testing: Suite completa `CheckSpaceAvailabilityTest` cubriendo:
+        - Consulta exitosa para usuarios autenticados.
+        - Validación de fechas (formato, orden cronológico).
+        - Manejo de espacios no encontrados (404).
+        - Restricción de acceso para usuarios no autenticados (401).
+    - Infraestructura: Creación del modelo `Reservation` y repositorio `ReservationRepository`.
+
 ## [0.7.0] - 2025-12-30
 
 ### 🚀 Añadido

@@ -29,7 +29,7 @@ abstract class Controller
         $output = [];
         $output["status"] = "success";
         $output["message"] = $message;
-        if (is_array($data) && !empty($data))
+        if (is_array($data))
             $output["data"] = $data;
 
         if ($statusCode == 204) {

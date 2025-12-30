@@ -63,4 +63,38 @@ class SpaceRepository extends BaseRepository
         return self::getOneBy(self::MODEL, ['uuid' => $uuid]);
     }
 
+    public static function getAvailableSpaces(string $date, ?string $spaceTypeId = null)
+    {
+        $query = self::MODEL::query()
+            ->where('is_active', true);
+
+        if ($spaceTypeId) {
+            $query->where('spaces_type_id', $spaceTypeId);
+        }
+
+        // Obtener el UUID del estado 'cancelada' para excluir esas reservas
+        $cancelledStatusUuid = DB::table('status')->where('name', 'cancelada')->value('uuid');
+
+        $driver = DB::connection()->getDriverName();
+        $timeDiffSql = $driver === 'sqlite' 
+            ? 'SUM(strftime("%s", end_time) - strftime("%s", start_time))'
+            : 'SUM(TIMESTAMPDIFF(SECOND, start_time, end_time))';
+
+        $query->whereNotExists(function ($subquery) use ($date, $cancelledStatusUuid, $timeDiffSql) {
+            $subquery->select(DB::raw(1))
+                ->from('reservation')
+                ->whereColumn('reservation.space_id', 'spaces.uuid')
+                ->whereDate('reservation.event_date', $date)
+                ->where('reservation.status_id', '!=', $cancelledStatusUuid)
+                ->whereNull('reservation.deleted_at')
+                ->groupBy('reservation.space_id')
+                ->havingRaw("$timeDiffSql >= 86400");
+        });
+
+        // NOTA: strftime es específico de SQLite. Para MySQL sería TIMESTAMPDIFF o similar.
+        // Como estamos en un entorno que parece usar SQLite para tests y posiblemente MySQL para dev, 
+        // usaremos una aproximación más segura o detectaremos el driver.
+        
+        return $query->get();
+    }
 }

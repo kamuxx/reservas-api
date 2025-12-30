@@ -6,10 +6,14 @@ use App\Models\Space;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Repositories\SpaceRepository;
+use Repositories\ReservationRepository;
 
 class SpaceUseCases
 {
-    public function __construct(private SpaceRepository $spaceRepository){}
+    public function __construct(
+        private SpaceRepository $spaceRepository,
+        private ReservationRepository $reservationRepository
+    ){}
 
     /**
      * Registra un nuevo espacio y su auditoría en una transacción.
@@ -93,5 +97,31 @@ class SpaceUseCases
         }
 
         return $space;
+    }
+
+    public function checkAvailability(string $spaceUuid, array $data): array
+    {
+        $startDate = $data['start_date'];
+        $endDate = $data['end_date'];
+
+        $occupiedSlots = $this->reservationRepository::getOccupiedSlots($spaceUuid, $startDate, $endDate);
+
+        // \Log::info('Occupied slots found: ' . $occupiedSlots->count());
+
+        return $occupiedSlots->toArray();
+    }
+
+    /**
+     * Obtiene los espacios con disponibilidad para una fecha específica (HU-011).
+     * 
+     * @param array $filters
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAvailableSpaces(array $filters)
+    {
+        $date = $filters['fecha_deseada'];
+        $spaceTypeId = $filters['space_type_id'] ?? null;
+
+        return $this->spaceRepository::getAvailableSpaces($date, $spaceTypeId);
     }
 }
