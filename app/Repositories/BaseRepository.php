@@ -18,6 +18,12 @@ class BaseRepository implements RepositoryContract
         return $modelClassName::create($data);   
     }
 
+    public static function getAll(string $modelClassName): array
+    {
+        if(!self::isModelValid($modelClassName)) throw new \Exception("El modelo debe ser una subclase de Model");
+        return $modelClassName::all();
+    }
+
     public static function getBy(string $modelClassName, array $filters): ?array
     {
         if(!self::isModelValid($modelClassName)) throw new \Exception("El modelo debe ser una subclase de Model");

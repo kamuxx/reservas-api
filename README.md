@@ -126,16 +126,16 @@ Esta interfaz te permitirá explorar los esquemas de datos y probar los endpoint
 
 ## ⏳ Estado de Implementación
 
-Actualmente el proyecto se encuentra en su **etapa inicial (0% implementado)**.
+Actualmente el proyecto se encuentra en su **etapa inicial (35% implementado)**.
 
 *   ✅ **Estructura Base** - Configuración inicial del framework y rutas base.
 *   ✅ **HU-001 a HU-004** - Implementación del Sistema de Autenticación JWT (Registro, Activación, Login, Logout).
 *   ✅ **HU-005** - Módulo de Creación de Espacios (Admin).
 *   ⏳ **HU-006 a HU-008** - Modificación y Consulta de Espacios.
 *   ⏳ **HU-009 a HU-011** - Motor de Reservas Atómicas y Disponibilidad.
-*   ✅ **🧪 Suite de Tests** - Implementación de pruebas unitarias y de integración para Auth.
-*   ✅ **📚 Swagger UI** - Documentación interactiva de endpoints de Auth implementados.
-*   ⏳ **🔒 RBAC** - Control de acceso basado en roles (Admin/Cliente).
+*   ✅ **🧪 Suite de Tests** - Implementación de pruebas unitarias y de integración para Auth y Espacios.
+*   ✅ **📚 Swagger UI** - Documentación interactiva de endpoints de Auth y Espacios implementados.
+*   ✅ **🔒 RBAC** - Control de acceso basado en roles (Admin/Cliente) para creación de espacios.
 *   ⏳ **📊 Reportes** - Vistas SQL optimizadas para analítica de uso.
 
 ---

@@ -75,20 +75,53 @@ class RegisterNewSpaceTest extends TestCase
         $status = Status::inRandomOrder()->first();
         $pricingRule = PricingRule::inRandomOrder()->first();
 
-        $response = $this->postJson('/api/spaces', [
+        $spaceData = [
             'name' => 'Space 1',
             'description' => 'Description 1',
-            'capacity' => 1,
+            'capacity' => 10,
             'spaces_type_id' => $spaceType->uuid,
             'status_id' => $status->uuid,
             'pricing_rule_id' => $pricingRule->uuid,
             'is_active' => true,
-        ], [
+        ];
+
+        $response = $this->postJson('/api/spaces', $spaceData, [
             'Authorization' => 'Bearer ' . $content['data']['access_token'],
         ]);
 
-        $this->withExceptionHandling();
         $response->assertStatus(201);
+
+        // Verify response structure and data
+        $response->assertJsonStructure([
+            'data' => [
+                'uuid',
+                'name',
+                'description',
+                'capacity',
+                'spaces_type_id',
+                'status_id',
+                'pricing_rule_id',
+                'is_active',
+            ]
+        ]);
+
+        $response->assertJsonFragment([
+            'name' => 'Space 1',
+            'capacity' => 10,
+        ]);
+
+        // Verify database persistence
+        $this->assertDatabaseHas('spaces', [
+            'name' => 'Space 1',
+            'capacity' => 10,
+            'spaces_type_id' => $spaceType->uuid,
+        ]);
+
+        // Verify audit trail
+        $this->assertDatabaseHas('entity_audit_trails', [
+            'entity_name' => 'spaces',
+            'operation' => 'create',
+        ]);
     }
 
     public function test_register_new_space_with_duplicated_name(): void
@@ -209,14 +242,13 @@ class RegisterNewSpaceTest extends TestCase
         $this->assertIsString($content['data']['access_token']);
 
 
-        $spaceType = SpaceType::inRandomOrder()->first();
         $status = Status::inRandomOrder()->first();
         $pricingRule = PricingRule::inRandomOrder()->first();
 
         $response = $this->postJson('/api/spaces', [
             'name' => 'Space 1',
             'description' => 'Description 1',
-            'capacity' => 0,
+            'capacity' => 10,
             'spaces_type_id' => Str::uuid()->toString(),
             'status_id' => $status->uuid,
             'pricing_rule_id' => $pricingRule->uuid,
@@ -226,12 +258,77 @@ class RegisterNewSpaceTest extends TestCase
             'Authorization' => 'Bearer ' . $content['data']['access_token'],
         ]);
 
-        $this->withExceptionHandling();
         $response->assertStatus(422);
 
         $content = $response->json();
         $this->assertArrayHasKey('errors', $content);
         $this->assertArrayHasKey('spaces_type_id', $content['errors']);
+    }
+
+    public function test_register_new_space_with_invalid_status_id(): void
+    {
+
+        $this->seed(UserAdminSeeder::class);
+        $admin = User::where('email', 'admin@admin.com')->first();
+
+        $loginResponse = $this->postJson('/api/auth/login', [
+            'email' => 'admin@admin.com',
+            'password' => 'Admin@123',
+        ]);
+
+        $loginResponse->assertStatus(200);
+        $content = $loginResponse->json();
+
+        $spaceType = SpaceType::inRandomOrder()->first();
+        $pricingRule = PricingRule::inRandomOrder()->first();
+
+        $response = $this->postJson('/api/spaces', [
+            'name' => 'Space 1',
+            'description' => 'Description 1',
+            'capacity' => 10,
+            'spaces_type_id' => $spaceType->uuid,
+            'status_id' => Str::uuid()->toString(),
+            'pricing_rule_id' => $pricingRule->uuid,
+            'is_active' => true,
+        ], [
+            'Authorization' => 'Bearer ' . $content['data']['access_token'],
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['status_id']);
+    }
+
+    public function test_register_new_space_with_invalid_pricing_rule_id(): void
+    {
+
+        $this->seed(UserAdminSeeder::class);
+        $admin = User::where('email', 'admin@admin.com')->first();
+
+        $loginResponse = $this->postJson('/api/auth/login', [
+            'email' => 'admin@admin.com',
+            'password' => 'Admin@123',
+        ]);
+
+        $loginResponse->assertStatus(200);
+        $content = $loginResponse->json();
+
+        $spaceType = SpaceType::inRandomOrder()->first();
+        $status = Status::inRandomOrder()->first();
+
+        $response = $this->postJson('/api/spaces', [
+            'name' => 'Space 1',
+            'description' => 'Description 1',
+            'capacity' => 10,
+            'spaces_type_id' => $spaceType->uuid,
+            'status_id' => $status->uuid,
+            'pricing_rule_id' => Str::uuid()->toString(),
+            'is_active' => true,
+        ], [
+            'Authorization' => 'Bearer ' . $content['data']['access_token'],
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['pricing_rule_id']);
     }
 
     public function test_register_new_space_with_fields_empty(): void

@@ -14,9 +14,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
     - Endpoints: `POST api/spaces`.
     - Middleware: `RoleMiddleware` para proteger rutas administrativas.
     - Modelos: `Space` con soporte para UUID y soft deletes (preparado).
-    - Testing: Suite completa `RegisterNewSpaceTest` cubriendo validaciones, seguridad y flujos de éxito.
+    - Testing: Suite completa `RegisterNewSpaceTest` cubriendo validaciones, seguridad y flujos de éxito (TP-HU005-001 al TP-HU005-006).
+    - Repositorio: `SpaceRepository` con patrón de abstracción y persistencia atómica.
+    - Auditoría: Registro automático en `entity_audit_trails` para cada creación de espacio.
 - **Seguridad:**
     - Middleware `isAdmin` para restricción de acceso basado en roles.
+    - Protección de rutas de gestión de espacios.
 
 ### ⚡ Optimizado
 - **Testing:** Mejora en `TestCase` para incluir seeders de `SpaceType` y `PricingRule`.

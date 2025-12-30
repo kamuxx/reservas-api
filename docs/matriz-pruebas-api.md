@@ -46,12 +46,12 @@
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|
-| TP-HU005-001 | FP | Creación exitosa espacio | 1. Usuario administrador autenticado<br>2. space_types existentes | name: "Sala A"<br>description: "Sala grande"<br>capacity: 20<br>is_active: true<br>space_type_id: 1 | 1. Enviar POST /api/spaces con JWT admin<br>2. Verificar creación | HTTP 201 Created<br>Espacio creado en BD<br>Audit trail registrado | Admin puede crear espacios |
-| TP-HU005-002 | FA-001 | Nombre duplicado | 1. Espacio "Sala A" ya existe | name: "Sala A" (duplicado) | 1. Enviar POST /api/spaces con nombre existente | HTTP 409 Conflict<br>Mensaje "Nombre ya en uso" | Previene duplicados de nombre |
-| TP-HU005-003 | FA-002 | Capacity inválida | - | capacity: 0<br>capacity: -5 | 1. Enviar POST /api/spaces con capacity inválida | HTTP 400 Bad Request<br>Mensaje "Capacity debe ser >0" | Valida capacity positiva |
-| TP-HU005-004 | FA-003 | space_type_id no existe | - | space_type_id: 999 | 1. Enviar POST /api/spaces con type inexistente | HTTP 400/404<br>Mensaje "Tipo de espacio no válido" | Valida referencias |
-| TP-HU005-005 | FS-001 | Usuario no administrador | 1. Usuario cliente autenticado | datos válidos | 1. Enviar POST /api/spaces con JWT cliente | HTTP 403 Forbidden | Solo admins pueden crear |
-| TP-HU005-006 | FS-002 | JWT inválido | - | JWT inválido o expirado | 1. Enviar POST /api/spaces sin autenticación válida | HTTP 401 Unauthorized | Requiere autenticación |
+| TP-HU005-001 ✅ | FP | Creación exitosa espacio | 1. Usuario administrador autenticado<br>2. space_types existentes | name: "Sala A"<br>description: "Sala grande"<br>capacity: 20<br>is_active: true<br>space_type_id: 1 | 1. Enviar POST /api/spaces with JWT admin<br>2. Verificar creación | HTTP 201 Created<br>Espacio creado en BD<br>Audit trail registrado | Admin puede crear espacios |
+| TP-HU005-002 ✅ | FA-001 | Nombre duplicado | 1. Espacio "Sala A" ya existe | name: "Sala A" (duplicado) | 1. Enviar POST /api/spaces con nombre existente | HTTP 409 Conflict<br>Mensaje "Nombre ya en uso" | Previene duplicados de nombre |
+| TP-HU005-003 ✅ | FA-002 | Capacity inválida | - | capacity: 0<br>capacity: -5 | 1. Enviar POST /api/spaces con capacity inválida | HTTP 400 Bad Request<br>Mensaje "Capacity debe ser >0" | Valida capacity positiva |
+| TP-HU005-004 ✅ | FA-003 | space_type_id no existe | - | space_type_id: 999 | 1. Enviar POST /api/spaces con type inexistente | HTTP 400/404<br>Mensaje "Tipo de espacio no válido" | Valida referencias |
+| TP-HU005-005 ✅ | FS-001 | Usuario no administrador | 1. Usuario cliente autenticado | datos válidos | 1. Enviar POST /api/spaces con JWT cliente | HTTP 403 Forbidden | Solo admins pueden crear |
+| TP-HU005-006 ✅ | FS-002 | JWT inválido | - | JWT inválido o expirado | 1. Enviar POST /api/spaces sin autenticación válida | HTTP 401 Unauthorized | Requiere autenticación |
 
 ### HU-006-UC-001: Modificación de Espacio (Admin)
 

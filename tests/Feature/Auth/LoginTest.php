@@ -15,7 +15,7 @@ class LoginTest extends TestCase
      */
     public function test_valid_router(): void
     {
-        $response = $this->post('/api/auth/login');
+        $response = $this->postJson('/api/auth/login');
 
         $this->assertNotEquals($response->status(), 404);
     }

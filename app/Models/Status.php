@@ -3,12 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Status extends Model
 {
     protected $table = 'status';
+
     protected $fillable = [
-        'uuid',
-        'name'
+        'name',
+        'uuid'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->uuid = (string) Str::uuid();
+        });
+    }
 }

@@ -8,7 +8,7 @@
 | HU-002-UC-001 | Activación de Cuenta de Usuario | HU-002 | ✅ Completado | Verificar la propiedad del email del usuario | El usuario activa su cuenta mediante un token de activación |
 | HU-003-UC-001 | Autenticación de Usuario (Login) | HU-003 | ✅ Completado | Permitir acceso al sistema a usuarios registrados y activos | El usuario ingresa sus credenciales para obtener un token JWT |
 | HU-004-UC-001 | Cierre de Sesión (Logout) | HU-004 | ✅ Completado | Invalidar de forma segura la sesión actual | El usuario cierra su sesión invalidando el JWT en el servidor |
-| HU-005-UC-001 | Creación de Espacio (Admin) | HU-005 | ⏳ Pendiente | Permitir a administradores añadir nuevos espacios | Un administrador crea un nuevo registro en la entidad `spaces` |
+| HU-005-UC-001 | Creación de Espacio (Admin) | HU-005 | ✅ Completado | Permitir a administradores añadir nuevos espacios | Un administrador crea un nuevo registro en la entidad `spaces` |
 | HU-006-UC-001 | Modificación de Espacio (Admin) | HU-006 | ⏳ Pendiente | Permitir a administradores actualizar información de espacios | Un administrador actualiza atributos de un espacio existente |
 | HU-007-UC-001 | Consulta de Listado de Espacios | HU-007 | ⏳ Pendiente | Permitir visualizar espacios disponibles | Cualquier usuario (autenticado o no) lista espacios con filtros |
 | HU-007-UC-002 | Consulta de Detalle de Espacio | HU-007 | ⏳ Pendiente | Ver información detallada de un espacio | Consulta individual de un espacio con reglas de autorización |
