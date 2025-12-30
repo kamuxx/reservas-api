@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Space extends Model
 {
+    use HasFactory;
+    
     protected $table = 'spaces';
 
     protected $fillable = [
@@ -35,6 +38,10 @@ class Space extends Model
         static::creating(function ($space) {
             $space->uuid = Str::uuid()->toString();
         });
+    }
+    public function getRouteKeyName()
+    {
+        return 'uuid';
     }
 
     public function spaceType()

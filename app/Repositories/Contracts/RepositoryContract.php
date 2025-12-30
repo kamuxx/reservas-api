@@ -1,13 +1,15 @@
 <?php 
 
 namespace Repositories\Contracts;
+
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 interface RepositoryContract
 {
     public static function insert(string $modelClassName, array $data): Model;
-    public static function getAll(string $modelClassName): array;
-    public static function getBy(string $modelClassName, array $filters): ?array;
+    public static function getAll(string $modelClassName): Collection;
+    public static function getBy(string $modelClassName, array $filters): ?Collection;
     public static function getOneBy(string $modelClassName, array $filters): ?Model;
     public static function update(string $modelClassName, array $filters, array $data): bool;
 }

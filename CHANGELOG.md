@@ -7,6 +7,21 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [Unreleased]
 
+## [0.6.0] - 2025-12-30
+
+### 🚀 Añadido
+- **Gestión de Espacios - Modificación (HU-006):** Implementación de la actualización de espacios para administradores.
+    - Endpoints: `PUT/PATCH api/spaces/{uuid}`.
+    - Validación: `UpdateSpaceRequest` con soporte para actualizaciones parciales (`sometimes`) y validación de unicidad de nombre ignorando el registro actual.
+    - Testing: Suite completa en `UpdateSpaceTest` cubriendo:
+        - Actualización exitosa con datos válidos.
+        - Prevención de nombres duplicados (FA-001).
+        - Manejo de espacios no encontrados (404) (FA-002).
+        - Restricción de acceso para no administradores (403) (FS-001).
+        - Validación de tipos de datos y existencia de llaves foráneas.
+        - Mantenimiento del nombre original sin conflicto.
+    - Cobertura: Configuración de reporte HTML de cobertura habilitada en `phpunit.xml`.
+
 ## [0.5.0] - 2025-12-29
 
 ### 🚀 Añadido

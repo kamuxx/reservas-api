@@ -42,4 +42,31 @@ class SpaceUseCases
             return $space;
         });
     }
+
+    public function update(Space $space, array $data): void
+    {
+        DB::transaction(function () use ($space, $data) {
+            $user = auth('api')->user();
+            $data['updated_by'] = $user->uuid;
+            // 1. Actualizar el espacio
+            $spaceUpdated = $this->spaceRepository::updateSpace(['uuid' => $space->uuid],$data);
+
+            // Validación de actualización (Consistente con el patrón del proyecto)
+            if (!$spaceUpdated || !$spaceUpdated instanceof Space) {
+                throw new \Exception("Error al actualizar el espacio");
+            }
+
+            // 2. Registrar la auditoría (HU-005)
+            DB::table('entity_audit_trails')->insert([
+                'entity_name' => 'spaces',
+                'entity_id'   => $space->uuid,
+                'operation'   => 'update',
+                'before_state' => json_encode($space->toArray()),
+                'after_state' => json_encode($spaceUpdated->toArray()),
+                'user_uuid'   => $data['updated_by'] ?? null,
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ]);
+        });
+    }
 }

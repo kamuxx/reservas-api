@@ -36,7 +36,7 @@ Route::group(["middleware" => ["auth:api", "isAdmin"]], function () {
         Route::get("", [SpaceController::class, "index"])->name("spaces.index");
         Route::get("/{id}", [SpaceController::class, "show"])->name("spaces.show");
         Route::post("", [SpaceController::class, "store"])->name("spaces.store");
-        Route::put("/{id}", [SpaceController::class, "update"])->name("spaces.update");
+        Route::put("/{space}", [SpaceController::class, "update"])->name("spaces.update");
         Route::delete("/{id}", [SpaceController::class, "destroy"])->name("spaces.destroy");
     });
 });

@@ -2,6 +2,7 @@
 
 namespace Repositories;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Repositories\Contracts\RepositoryContract;
 
@@ -18,13 +19,13 @@ class BaseRepository implements RepositoryContract
         return $modelClassName::create($data);   
     }
 
-    public static function getAll(string $modelClassName): array
+    public static function getAll(string $modelClassName): Collection
     {
         if(!self::isModelValid($modelClassName)) throw new \Exception("El modelo debe ser una subclase de Model");
         return $modelClassName::all();
     }
 
-    public static function getBy(string $modelClassName, array $filters): ?array
+    public static function getBy(string $modelClassName, array $filters): ?Collection
     {
         if(!self::isModelValid($modelClassName)) throw new \Exception("El modelo debe ser una subclase de Model");
         return $modelClassName::where($filters)->get();

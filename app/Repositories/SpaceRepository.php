@@ -26,4 +26,16 @@ class SpaceRepository extends BaseRepository
         return self::getBy(self::MODEL,$filters);
     }
 
+    public static function updateSpace(array $filters, array $data): ?Space
+    {
+        return  DB::transaction(function () use ($filters, $data) {
+            self::update(self::MODEL,$filters,$data);
+            $space = self::getOneBy(self::MODEL,$filters);
+            if (!$space || !$space instanceof Space) {
+                throw new \Exception("Error al actualizar el espacio");
+            }
+            return $space;
+        });
+    }
+
 }
