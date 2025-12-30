@@ -22,7 +22,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 - **Control de Acceso Robusto:** Validación de estados de usuario (bloqueado/inactivo) y roles en todos los niveles.
 
 ### 🧪 Testing
+- **Mejora de Cobertura de Código:** Se ha verificado y reforzado la cobertura de código alcanzando un **95.95%**, superando significativamente el objetivo mínimo del 85%.
 - **100% Cobertura de HUs:** Suite de 91 pruebas pasando exitosamente (316 aserciones).
+- **Nuevos Tests Unitarios:**
+    - `UserRegisteredNotificacionTest`: Cobertura completa de la notificación de bienvenida (`toMail`, `via`, `toArray`).
+    - `EnsureUserIsActiveTest`: Validación robusta del middleware de seguridad para usuarios inactivos o no autenticados.
+    - `UserMethodsTest`: Verificación de métodos internos del modelo `User` para manejo de roles, estados y tokens.
 - **LoginAuditTrailTest:** Verificación de registros de auditoría de seguridad.
 
 ## [0.9.0] - 2025-12-30

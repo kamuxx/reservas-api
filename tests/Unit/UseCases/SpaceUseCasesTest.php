@@ -116,6 +116,59 @@ class SpaceUseCasesTest extends TestCase
         $this->assertEquals(['slot1'], $result);
     }
 
+    public function test_update_space_success(): void
+    {
+        $user = \App\Models\User::factory()->create();
+        $this->actingAs($user, 'api');
+
+        $space = new Space(['name' => 'Old Name']);
+        $space->uuid = 'space-uuid';
+
+        $data = ['name' => 'New Name'];
+        $updatedSpace = new Space(['name' => 'New Name']);
+        $updatedSpace->uuid = 'space-uuid';
+
+        $this->spaceRepository->shouldReceive('updateSpace')
+            ->once()
+            ->andReturn($updatedSpace);
+
+        $this->spaceUseCases->update($space, $data);
+        
+        $this->assertDatabaseHas('entity_audit_trails', [
+            'entity_name' => 'spaces',
+            'operation' => 'update',
+            'entity_id' => 'space-uuid'
+        ]);
+    }
+
+    public function test_find_space_inactive_as_non_admin(): void
+    {
+        $space = new Space(['is_active' => false]);
+        $space->uuid = 'inactive-uuid';
+
+        $this->spaceRepository->shouldReceive('findByUuid')
+            ->once()
+            ->with('inactive-uuid')
+            ->andReturn($space);
+
+        $result = $this->spaceUseCases->find('inactive-uuid', false);
+        $this->assertNull($result);
+    }
+
+    public function test_find_space_inactive_as_admin(): void
+    {
+        $space = new Space(['is_active' => false]);
+        $space->uuid = 'inactive-uuid';
+
+        $this->spaceRepository->shouldReceive('findByUuid')
+            ->once()
+            ->with('inactive-uuid')
+            ->andReturn($space);
+
+        $result = $this->spaceUseCases->find('inactive-uuid', true);
+        $this->assertEquals($space, $result);
+    }
+
     public function test_get_available_spaces(): void
     {
         $filters = ['fecha_deseada' => '2025-01-01', 'space_type_id' => 'type-uuid'];
@@ -123,9 +176,55 @@ class SpaceUseCasesTest extends TestCase
         $this->spaceRepository->shouldReceive('getAvailableSpaces')
             ->once()
             ->with('2025-01-01', 'type-uuid')
-            ->andReturn(collect([]));
+            ->andReturn(new \Illuminate\Database\Eloquent\Collection([]));
 
         $result = $this->spaceUseCases->getAvailableSpaces($filters);
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
+        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $result);
+    }
+
+    public function test_register_space_invalid_return(): void
+    {
+        $data = ['name' => 'Invalid Return'];
+
+        // Mockery will throw TypeError if we try to return null for a non-nullable return type
+        $this->spaceRepository->shouldReceive('create')
+            ->once()
+            ->andThrow(new \TypeError("Return value must be of type App\Models\Space, null returned"));
+
+        $this->expectException(\TypeError::class);
+        $this->spaceUseCases->register($data);
+    }
+
+    public function test_update_space_invalid_return(): void
+    {
+        $user = \App\Models\User::factory()->create();
+        $this->actingAs($user, 'api');
+
+        $space = new Space(['name' => 'Old Name']);
+        $space->uuid = 'space-uuid';
+
+        $data = ['name' => 'New Name'];
+
+        $this->spaceRepository->shouldReceive('updateSpace')
+            ->once()
+            ->andReturn(null);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("Error al actualizar el espacio");
+
+        $this->spaceUseCases->update($space, $data);
+    }
+
+    public function test_list_spaces_as_admin(): void
+    {
+        $filters = ['per_page' => 10];
+        
+        $this->spaceRepository->shouldReceive('paginate')
+            ->once()
+            ->with($filters, 10)
+            ->andReturn(new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10));
+
+        $result = $this->spaceUseCases->list($filters, true);
+        $this->assertInstanceOf(\Illuminate\Contracts\Pagination\LengthAwarePaginator::class, $result);
     }
 }

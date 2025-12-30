@@ -23,7 +23,7 @@ return new class extends Migration
             $table->time('start_time')->index();
             $table->time('end_time')->index();
             $table->decimal('event_price',16,2)->default(0);
-            $table->string('pricing_rule_id',36)->index();
+            $table->string('pricing_rule_id',36)->nullable()->index();
             $table->text('cancellation_reason')->nullable()->default(null);
             $table->string('cancellation_by',36)->nullable()->default(null);
             $table->timestamps();

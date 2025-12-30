@@ -143,4 +143,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return password_verify($password, $this->password);
     }
+
+    public function isAdmin(): bool
+    {
+        $role = Role::where('name', 'admin')->first();
+        return $role && $this->role_id === $role->uuid;
+    }
 }

@@ -61,14 +61,14 @@ class UserUseCases
         try {
             $this->tokenRepository->update(UserActivationToken::class, ["uuid" => $oToken->uuid], ["validated_at" => Carbon::now(), "used_at" => Carbon::now()]);
             $this->userRepository::activateUser(["uuid" => $oToken->uuid]);
-        } catch (NotFoundHttpException | UnprocessableEntityHttpException $e) {
+        } catch (NotFoundHttpException | UnprocessableEntityHttpException | AuthenticationException $e) {
             $exceptionMessage = "Error al activar la cuenta: " . $e->getMessage();
             if ($e instanceof NotFoundHttpException)
                 throw new NotFoundHttpException($exceptionMessage);
             if ($e instanceof UnprocessableEntityHttpException)
                 throw new UnprocessableEntityHttpException($exceptionMessage);
-            if ($e instanceof UnauthenticatedException)
-                throw new UnauthenticatedException($exceptionMessage);
+            if ($e instanceof AuthenticationException)
+                throw new AuthenticationException($exceptionMessage);
         } catch (Throwable $e) {
             $exceptionMessage = "Error al activar la cuenta: " . $e->getMessage();
             throw new \Exception($exceptionMessage);
