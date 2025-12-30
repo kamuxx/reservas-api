@@ -102,6 +102,35 @@ Para visualizar la documentación interactiva de los endpoints, asegúrate de qu
 
 Esta interfaz te permitirá explorar los esquemas de datos y probar los endpoints directamente desde el navegador.
 
+### 9. Cobertura de Código (Opcional)
+Para generar reportes de cobertura de código, es necesario tener instalada la extensión **Xdebug** o **PCOV** en PHP.
+
+#### **Guía Genérica de Instalación**
+1.  Descarga la extensión correspondiente a tu versión de PHP y arquitectura (x64/x86).
+2.  Copia el archivo `.dll` (Windows) o `.so` (Linux) en la carpeta de extensiones de PHP (`ext/`).
+3.  Habilita la extensión en tu archivo `php.ini`:
+    ```ini
+    ; Para Xdebug 3.x
+    zend_extension=xdebug
+    xdebug.mode=coverage
+    
+    ; Para PCOV
+    extension=pcov
+    ```
+4.  Reinicia tu servidor web o servicio PHP.
+
+#### **Ejemplo: Windows con Laragon**
+Si utilizas Laragon, sigue estos pasos específicos:
+1.  Ubica tu carpeta de extensiones, por ejemplo: `C:\laragon\bin\php\php-x.x.x-Win32-vs17-x64\ext`.
+2.  Asegúrate de tener el archivo `php_xdebug.dll` en esa carpeta.
+3.  Desde el panel de Laragon, ve a **PHP > php.ini** y añade al final:
+    ```ini
+    [xdebug]
+    zend_extension="C:\laragon\bin\php\php-x.x.x-Win32-vs17-x64\ext\php_xdebug.dll"
+    xdebug.mode=coverage
+    ```
+4.  Haz clic en **"Stop"** y luego en **"Start"** en Laragon para aplicar los cambios.
+
 ---
 
 ## 🏗 Funcionalidades del Backend (Dominio de Negocio)
