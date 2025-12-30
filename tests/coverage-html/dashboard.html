@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for C:\www\pruebas\agencia\reservas-api\app</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="_css/bootstrap.min.css?v=11.0.11" rel="stylesheet" type="text/css">
+  <link href="_css/nv.d3.min.css?v=11.0.11" rel="stylesheet" type="text/css">
+  <link href="_css/style.css?v=11.0.11" rel="stylesheet" type="text/css">
+  <link href="_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="index.html">C:\www\pruebas\agencia\reservas-api\app</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Http/Controllers/Auth/AuthController.php.html#15">App\Http\Controllers\Auth\AuthController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/RegisterController.php.html#11">App\Http\Controllers\Auth\RegisterController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Middleware/EnsureUserIsActive.php.html#10">App\Http\Middleware\EnsureUserIsActive</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Middleware/RoleMiddleware.php.html#10">App\Http\Middleware\RoleMiddleware</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/LoginRequest.php.html#7">App\Http\Requests\Auth\LoginRequest</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/RegisterUserRequest.php.html#7">App\Http\Requests\Auth\RegisterUserRequest</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/ValidateAccountRequest.php.html#7">App\Http\Requests\Auth\ValidateAccountRequest</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Space/RegisterSpaceRequest.php.html#7">App\Http\Requests\Space\RegisterSpaceRequest</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Space/UpdateSpaceRequest.php.html#7">App\Http\Requests\Space\UpdateSpaceRequest</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/UserActivationToken.php.html#9">App\Models\UserActivationToken</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Notifications/Auth/UserRegisteredNotificacion.php.html#11">App\Notifications\Auth\UserRegisteredNotificacion</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/TokenRepository.php.html#8">Repositories\TokenRepository</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/UserRepository.php.html#10">Repositories\UserRepository</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="UseCases/UserUseCases.php.html#21">UseCases\UserUseCases</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#14">App\Http\Controllers\Controller</a></td><td class="text-right">25%</td></tr>
+       <tr><td><a href="UseCases/SpaceUseCases.php.html#10">UseCases\SpaceUseCases</a></td><td class="text-right">25%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#9">Repositories\BaseRepository</a></td><td class="text-right">33%</td></tr>
+       <tr><td><a href="Http/Controllers/SpaceController.php.html#13">App\Http\Controllers\SpaceController</a></td><td class="text-right">42%</td></tr>
+       <tr><td><a href="Repositories/SpaceRepository.php.html#9">Repositories\SpaceRepository</a></td><td class="text-right">42%</td></tr>
+       <tr><td><a href="Models/Space.php.html#9">App\Models\Space</a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="Models/User.php.html#14">App\Models\User</a></td><td class="text-right">64%</td></tr>
+       <tr><td><a href="Models/Role.php.html#8">App\Models\Role</a></td><td class="text-right">80%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="UseCases/UserUseCases.php.html#21">UseCases\UserUseCases</a></td><td class="text-right">552</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#14">App\Http\Controllers\Controller</a></td><td class="text-right">288</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/AuthController.php.html#15">App\Http\Controllers\Auth\AuthController</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="UseCases/SpaceUseCases.php.html#10">UseCases\SpaceUseCases</a></td><td class="text-right">82</td></tr>
+       <tr><td><a href="Repositories/UserRepository.php.html#10">Repositories\UserRepository</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Http/Controllers/SpaceController.php.html#13">App\Http\Controllers\SpaceController</a></td><td class="text-right">51</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#9">Repositories\BaseRepository</a></td><td class="text-right">46</td></tr>
+       <tr><td><a href="Repositories/SpaceRepository.php.html#9">Repositories\SpaceRepository</a></td><td class="text-right">33</td></tr>
+       <tr><td><a href="Models/User.php.html#14">App\Models\User</a></td><td class="text-right">32</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/RegisterController.php.html#11">App\Http\Controllers\Auth\RegisterController</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Http/Middleware/EnsureUserIsActive.php.html#10">App\Http\Middleware\EnsureUserIsActive</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Repositories/TokenRepository.php.html#8">Repositories\TokenRepository</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Http/Middleware/RoleMiddleware.php.html#10">App\Http\Middleware\RoleMiddleware</a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Http/Controllers/Auth/AuthController.php.html#17"><abbr title="App\Http\Controllers\Auth\AuthController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/AuthController.php.html#19"><abbr title="App\Http\Controllers\Auth\AuthController::activate">activate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/AuthController.php.html#36"><abbr title="App\Http\Controllers\Auth\AuthController::login">login</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/AuthController.php.html#52"><abbr title="App\Http\Controllers\Auth\AuthController::respondWithToken">respondWithToken</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/AuthController.php.html#61"><abbr title="App\Http\Controllers\Auth\AuthController::logout">logout</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/RegisterController.php.html#13"><abbr title="App\Http\Controllers\Auth\RegisterController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/RegisterController.php.html#17"><abbr title="App\Http\Controllers\Auth\RegisterController::register">register</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#74"><abbr title="App\Http\Controllers\Controller::serverError">serverError</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#98"><abbr title="App\Http\Controllers\Controller::clientError">clientError</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#124"><abbr title="App\Http\Controllers\Controller::writeLogError">writeLogError</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/SpaceController.php.html#30"><abbr title="App\Http\Controllers\SpaceController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/SpaceController.php.html#42"><abbr title="App\Http\Controllers\SpaceController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Middleware/EnsureUserIsActive.php.html#17"><abbr title="App\Http\Middleware\EnsureUserIsActive::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Middleware/RoleMiddleware.php.html#17"><abbr title="App\Http\Middleware\RoleMiddleware::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/LoginRequest.php.html#12"><abbr title="App\Http\Requests\Auth\LoginRequest::authorize">authorize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/LoginRequest.php.html#22"><abbr title="App\Http\Requests\Auth\LoginRequest::rules">rules</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/LoginRequest.php.html#31"><abbr title="App\Http\Requests\Auth\LoginRequest::messages">messages</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/LoginRequest.php.html#43"><abbr title="App\Http\Requests\Auth\LoginRequest::attributes">attributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/RegisterUserRequest.php.html#12"><abbr title="App\Http\Requests\Auth\RegisterUserRequest::authorize">authorize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/RegisterUserRequest.php.html#22"><abbr title="App\Http\Requests\Auth\RegisterUserRequest::rules">rules</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/RegisterUserRequest.php.html#33"><abbr title="App\Http\Requests\Auth\RegisterUserRequest::messages">messages</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/RegisterUserRequest.php.html#51"><abbr title="App\Http\Requests\Auth\RegisterUserRequest::attributes">attributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/ValidateAccountRequest.php.html#12"><abbr title="App\Http\Requests\Auth\ValidateAccountRequest::authorize">authorize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/ValidateAccountRequest.php.html#22"><abbr title="App\Http\Requests\Auth\ValidateAccountRequest::rules">rules</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/ValidateAccountRequest.php.html#30"><abbr title="App\Http\Requests\Auth\ValidateAccountRequest::messages">messages</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/ValidateAccountRequest.php.html#39"><abbr title="App\Http\Requests\Auth\ValidateAccountRequest::attributes">attributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Space/RegisterSpaceRequest.php.html#12"><abbr title="App\Http\Requests\Space\RegisterSpaceRequest::authorize">authorize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Space/RegisterSpaceRequest.php.html#22"><abbr title="App\Http\Requests\Space\RegisterSpaceRequest::rules">rules</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Space/RegisterSpaceRequest.php.html#35"><abbr title="App\Http\Requests\Space\RegisterSpaceRequest::attributes">attributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Space/RegisterSpaceRequest.php.html#48"><abbr title="App\Http\Requests\Space\RegisterSpaceRequest::messages">messages</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Space/UpdateSpaceRequest.php.html#12"><abbr title="App\Http\Requests\Space\UpdateSpaceRequest::authorize">authorize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Space/UpdateSpaceRequest.php.html#22"><abbr title="App\Http\Requests\Space\UpdateSpaceRequest::rules">rules</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Space/UpdateSpaceRequest.php.html#36"><abbr title="App\Http\Requests\Space\UpdateSpaceRequest::messages">messages</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Space/UpdateSpaceRequest.php.html#53"><abbr title="App\Http\Requests\Space\UpdateSpaceRequest::attributes">attributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Role.php.html#23"><abbr title="App\Models\Role::users">users</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Space.php.html#40"><abbr title="App\Models\Space::getRouteKeyName">getRouteKeyName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Space.php.html#45"><abbr title="App\Models\Space::spaceType">spaceType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Space.php.html#50"><abbr title="App\Models\Space::status">status</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Space.php.html#55"><abbr title="App\Models\Space::pricingRule">pricingRule</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/User.php.html#76"><abbr title="App\Models\User::status">status</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/User.php.html#86"><abbr title="App\Models\User::activate">activate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/User.php.html#124"><abbr title="App\Models\User::isActive">isActive</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/User.php.html#140"><abbr title="App\Models\User::isValidPassword">isValidPassword</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/UserActivationToken.php.html#29"><abbr title="App\Models\UserActivationToken::user">user</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/UserActivationToken.php.html#34"><abbr title="App\Models\UserActivationToken::isExpired">isExpired</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/UserActivationToken.php.html#40"><abbr title="App\Models\UserActivationToken::isUsed">isUsed</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/UserActivationToken.php.html#45"><abbr title="App\Models\UserActivationToken::isValidated">isValidated</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/UserActivationToken.php.html#50"><abbr title="App\Models\UserActivationToken::isValidCode">isValidCode</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Notifications/Auth/UserRegisteredNotificacion.php.html#18"><abbr title="App\Notifications\Auth\UserRegisteredNotificacion::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Notifications/Auth/UserRegisteredNotificacion.php.html#28"><abbr title="App\Notifications\Auth\UserRegisteredNotificacion::via">via</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Notifications/Auth/UserRegisteredNotificacion.php.html#36"><abbr title="App\Notifications\Auth\UserRegisteredNotificacion::toMail">toMail</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Notifications/Auth/UserRegisteredNotificacion.php.html#50"><abbr title="App\Notifications\Auth\UserRegisteredNotificacion::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#16"><abbr title="Repositories\BaseRepository::insert">insert</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#22"><abbr title="Repositories\BaseRepository::getAll">getAll</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#28"><abbr title="Repositories\BaseRepository::getBy">getBy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#41"><abbr title="Repositories\BaseRepository::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/SpaceRepository.php.html#13"><abbr title="Repositories\SpaceRepository::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/SpaceRepository.php.html#20"><abbr title="Repositories\SpaceRepository::all">all</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/SpaceRepository.php.html#25"><abbr title="Repositories\SpaceRepository::search">search</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/SpaceRepository.php.html#49"><abbr title="Repositories\SpaceRepository::updateSpace">updateSpace</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/TokenRepository.php.html#10"><abbr title="Repositories\TokenRepository::getByToken">getByToken</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/UserRepository.php.html#17"><abbr title="Repositories\UserRepository::createNewUser">createNewUser</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/UserRepository.php.html#25"><abbr title="Repositories\UserRepository::updateUser">updateUser</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/UserRepository.php.html#30"><abbr title="Repositories\UserRepository::activateUser">activateUser</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/UserRepository.php.html#37"><abbr title="Repositories\UserRepository::updateLastLoginAt">updateLastLoginAt</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="UseCases/SpaceUseCases.php.html#20"><abbr title="UseCases\SpaceUseCases::register">register</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="UseCases/SpaceUseCases.php.html#46"><abbr title="UseCases\SpaceUseCases::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="UseCases/UserUseCases.php.html#23"><abbr title="UseCases\UserUseCases::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="UseCases/UserUseCases.php.html#28"><abbr title="UseCases\UserUseCases::registerNewUser">registerNewUser</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="UseCases/UserUseCases.php.html#43"><abbr title="UseCases\UserUseCases::activateAccount">activateAccount</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="UseCases/UserUseCases.php.html#78"><abbr title="UseCases\UserUseCases::login">login</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="UseCases/UserUseCases.php.html#101"><abbr title="UseCases\UserUseCases::logout">logout</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/User.php.html#95"><abbr title="App\Models\User::assingInitialRoleAndStatus">assingInitialRoleAndStatus</abbr></a></td><td class="text-right">25%</td></tr>
+       <tr><td><a href="Http/Controllers/SpaceController.php.html#17"><abbr title="App\Http\Controllers\SpaceController::index">index</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Http/Controllers/SpaceController.php.html#53"><abbr title="App\Http\Controllers\SpaceController::show">show</abbr></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#27"><abbr title="App\Http\Controllers\Controller::success">success</abbr></a></td><td class="text-right">76%</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#56"><abbr title="App\Http\Controllers\Controller::error">error</abbr></a></td><td class="text-right">85%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="UseCases/UserUseCases.php.html#43"><abbr title="UseCases\UserUseCases::activateAccount">activateAccount</abbr></a></td><td class="text-right">156</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#98"><abbr title="App\Http\Controllers\Controller::clientError">clientError</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#74"><abbr title="App\Http\Controllers\Controller::serverError">serverError</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="UseCases/UserUseCases.php.html#78"><abbr title="UseCases\UserUseCases::login">login</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Models/User.php.html#95"><abbr title="App\Models\User::assingInitialRoleAndStatus">assingInitialRoleAndStatus</abbr></a></td><td class="text-right">15</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/AuthController.php.html#19"><abbr title="App\Http\Controllers\Auth\AuthController::activate">activate</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/AuthController.php.html#36"><abbr title="App\Http\Controllers\Auth\AuthController::login">login</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/RegisterController.php.html#17"><abbr title="App\Http\Controllers\Auth\RegisterController::register">register</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Http/Middleware/EnsureUserIsActive.php.html#17"><abbr title="App\Http\Middleware\EnsureUserIsActive::handle">handle</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Repositories/SpaceRepository.php.html#49"><abbr title="Repositories\SpaceRepository::updateSpace">updateSpace</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Repositories/TokenRepository.php.html#10"><abbr title="Repositories\TokenRepository::getByToken">getByToken</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Repositories/UserRepository.php.html#17"><abbr title="Repositories\UserRepository::createNewUser">createNewUser</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="UseCases/SpaceUseCases.php.html#20"><abbr title="UseCases\SpaceUseCases::register">register</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="UseCases/SpaceUseCases.php.html#46"><abbr title="UseCases\SpaceUseCases::update">update</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="UseCases/UserUseCases.php.html#28"><abbr title="UseCases\UserUseCases::registerNewUser">registerNewUser</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#27"><abbr title="App\Http\Controllers\Controller::success">success</abbr></a></td><td class="text-right">8</td></tr>
+       <tr><td><a href="Http/Controllers/Auth/AuthController.php.html#61"><abbr title="App\Http\Controllers\Auth\AuthController::logout">logout</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#124"><abbr title="App\Http\Controllers\Controller::writeLogError">writeLogError</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Http/Controllers/SpaceController.php.html#30"><abbr title="App\Http\Controllers\SpaceController::store">store</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Http/Controllers/SpaceController.php.html#42"><abbr title="App\Http\Controllers\SpaceController::update">update</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Http/Middleware/RoleMiddleware.php.html#17"><abbr title="App\Http\Middleware\RoleMiddleware::handle">handle</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Models/User.php.html#86"><abbr title="App\Models\User::activate">activate</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#16"><abbr title="Repositories\BaseRepository::insert">insert</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#22"><abbr title="Repositories\BaseRepository::getAll">getAll</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#28"><abbr title="Repositories\BaseRepository::getBy">getBy</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repositories/BaseRepository.php.html#41"><abbr title="Repositories\BaseRepository::update">update</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repositories/UserRepository.php.html#30"><abbr title="Repositories\UserRepository::activateUser">activateUser</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="UseCases/UserUseCases.php.html#101"><abbr title="UseCases\UserUseCases::logout">logout</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Http/Controllers/SpaceController.php.html#53"><abbr title="App\Http\Controllers\SpaceController::show">show</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="Http/Controllers/SpaceController.php.html#17"><abbr title="App\Http\Controllers\SpaceController::index">index</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Http/Controllers/Controller.php.html#56"><abbr title="App\Http\Controllers\Controller::error">error</abbr></a></td><td class="text-right">3</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 11.0.11</a> using <a href="https://www.php.net/" target="_top">PHP 8.4.5</a> and <a href="https://phpunit.de/">PHPUnit 11.5.46</a> at Tue Dec 30 1:11:08 -04 2025.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="_js/jquery.min.js?v=11.0.11" type="text/javascript"></script>
+  <script src="_js/d3.min.js?v=11.0.11" type="text/javascript"></script>
+  <script src="_js/nv.d3.min.js?v=11.0.11" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([14,0,0,2,1,2,1,1,0,1,0,5], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([72,0,0,1,0,0,0,1,2,1,0,24], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,10,"<a href=\"Http\/Controllers\/Auth\/AuthController.php.html#15\">App\\Http\\Controllers\\Auth\\AuthController<\/a>"],[0,4,"<a href=\"Http\/Controllers\/Auth\/RegisterController.php.html#11\">App\\Http\\Controllers\\Auth\\RegisterController<\/a>"],[25,25,"<a href=\"Http\/Controllers\/Controller.php.html#14\">App\\Http\\Controllers\\Controller<\/a>"],[42.30769230769231,14,"<a href=\"Http\/Controllers\/SpaceController.php.html#13\">App\\Http\\Controllers\\SpaceController<\/a>"],[0,3,"<a href=\"Http\/Middleware\/EnsureUserIsActive.php.html#10\">App\\Http\\Middleware\\EnsureUserIsActive<\/a>"],[0,2,"<a href=\"Http\/Middleware\/RoleMiddleware.php.html#10\">App\\Http\\Middleware\\RoleMiddleware<\/a>"],[0,4,"<a href=\"Http\/Requests\/Auth\/LoginRequest.php.html#7\">App\\Http\\Requests\\Auth\\LoginRequest<\/a>"],[0,4,"<a href=\"Http\/Requests\/Auth\/RegisterUserRequest.php.html#7\">App\\Http\\Requests\\Auth\\RegisterUserRequest<\/a>"],[0,4,"<a href=\"Http\/Requests\/Auth\/ValidateAccountRequest.php.html#7\">App\\Http\\Requests\\Auth\\ValidateAccountRequest<\/a>"],[100,2,"<a href=\"Http\/Requests\/Space\/ListSpacesRequest.php.html#7\">App\\Http\\Requests\\Space\\ListSpacesRequest<\/a>"],[0,4,"<a href=\"Http\/Requests\/Space\/RegisterSpaceRequest.php.html#7\">App\\Http\\Requests\\Space\\RegisterSpaceRequest<\/a>"],[0,4,"<a href=\"Http\/Requests\/Space\/UpdateSpaceRequest.php.html#7\">App\\Http\\Requests\\Space\\UpdateSpaceRequest<\/a>"],[100,2,"<a href=\"Models\/PricingRule.php.html#9\">App\\Models\\PricingRule<\/a>"],[80,2,"<a href=\"Models\/Role.php.html#8\">App\\Models\\Role<\/a>"],[50,5,"<a href=\"Models\/Space.php.html#9\">App\\Models\\Space<\/a>"],[100,2,"<a href=\"Models\/SpaceType.php.html#9\">App\\Models\\SpaceType<\/a>"],[100,1,"<a href=\"Models\/Status.php.html#8\">App\\Models\\Status<\/a>"],[64.28571428571429,18,"<a href=\"Models\/User.php.html#14\">App\\Models\\User<\/a>"],[0,5,"<a href=\"Models\/UserActivationToken.php.html#9\">App\\Models\\UserActivationToken<\/a>"],[0,4,"<a href=\"Notifications\/Auth\/UserRegisteredNotificacion.php.html#11\">App\\Notifications\\Auth\\UserRegisteredNotificacion<\/a>"],[100,2,"<a href=\"Providers\/AppServiceProvider.php.html#7\">App\\Providers\\AppServiceProvider<\/a>"],[33.33333333333333,11,"<a href=\"Repositories\/BaseRepository.php.html#9\">Repositories\\BaseRepository<\/a>"],[42.857142857142854,11,"<a href=\"Repositories\/SpaceRepository.php.html#9\">Repositories\\SpaceRepository<\/a>"],[0,3,"<a href=\"Repositories\/TokenRepository.php.html#8\">Repositories\\TokenRepository<\/a>"],[0,7,"<a href=\"Repositories\/UserRepository.php.html#10\">Repositories\\UserRepository<\/a>"],[25.581395348837212,13,"<a href=\"UseCases\/SpaceUseCases.php.html#10\">UseCases\\SpaceUseCases<\/a>"],[0,23,"<a href=\"UseCases\/UserUseCases.php.html#21\">UseCases\\UserUseCases<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,1,"<a href=\"Http\/Controllers\/Auth\/AuthController.php.html#17\">App\\Http\\Controllers\\Auth\\AuthController::__construct<\/a>"],[0,3,"<a href=\"Http\/Controllers\/Auth\/AuthController.php.html#19\">App\\Http\\Controllers\\Auth\\AuthController::activate<\/a>"],[0,3,"<a href=\"Http\/Controllers\/Auth\/AuthController.php.html#36\">App\\Http\\Controllers\\Auth\\AuthController::login<\/a>"],[0,1,"<a href=\"Http\/Controllers\/Auth\/AuthController.php.html#52\">App\\Http\\Controllers\\Auth\\AuthController::respondWithToken<\/a>"],[0,2,"<a href=\"Http\/Controllers\/Auth\/AuthController.php.html#61\">App\\Http\\Controllers\\Auth\\AuthController::logout<\/a>"],[0,1,"<a href=\"Http\/Controllers\/Auth\/RegisterController.php.html#13\">App\\Http\\Controllers\\Auth\\RegisterController::__construct<\/a>"],[0,3,"<a href=\"Http\/Controllers\/Auth\/RegisterController.php.html#17\">App\\Http\\Controllers\\Auth\\RegisterController::register<\/a>"],[76.92307692307693,8,"<a href=\"Http\/Controllers\/Controller.php.html#27\">App\\Http\\Controllers\\Controller::success<\/a>"],[85.71428571428571,3,"<a href=\"Http\/Controllers\/Controller.php.html#56\">App\\Http\\Controllers\\Controller::error<\/a>"],[0,5,"<a href=\"Http\/Controllers\/Controller.php.html#74\">App\\Http\\Controllers\\Controller::serverError<\/a>"],[0,7,"<a href=\"Http\/Controllers\/Controller.php.html#98\">App\\Http\\Controllers\\Controller::clientError<\/a>"],[0,2,"<a href=\"Http\/Controllers\/Controller.php.html#124\">App\\Http\\Controllers\\Controller::writeLogError<\/a>"],[100,1,"<a href=\"Http\/Controllers\/SpaceController.php.html#15\">App\\Http\\Controllers\\SpaceController::__construct<\/a>"],[66.66666666666666,4,"<a href=\"Http\/Controllers\/SpaceController.php.html#17\">App\\Http\\Controllers\\SpaceController::index<\/a>"],[0,2,"<a href=\"Http\/Controllers\/SpaceController.php.html#30\">App\\Http\\Controllers\\SpaceController::store<\/a>"],[0,2,"<a href=\"Http\/Controllers\/SpaceController.php.html#42\">App\\Http\\Controllers\\SpaceController::update<\/a>"],[75,5,"<a href=\"Http\/Controllers\/SpaceController.php.html#53\">App\\Http\\Controllers\\SpaceController::show<\/a>"],[0,3,"<a href=\"Http\/Middleware\/EnsureUserIsActive.php.html#17\">App\\Http\\Middleware\\EnsureUserIsActive::handle<\/a>"],[0,2,"<a href=\"Http\/Middleware\/RoleMiddleware.php.html#17\">App\\Http\\Middleware\\RoleMiddleware::handle<\/a>"],[0,1,"<a href=\"Http\/Requests\/Auth\/LoginRequest.php.html#12\">App\\Http\\Requests\\Auth\\LoginRequest::authorize<\/a>"],[0,1,"<a href=\"Http\/Requests\/Auth\/LoginRequest.php.html#22\">App\\Http\\Requests\\Auth\\LoginRequest::rules<\/a>"],[0,1,"<a href=\"Http\/Requests\/Auth\/LoginRequest.php.html#31\">App\\Http\\Requests\\Auth\\LoginRequest::messages<\/a>"],[0,1,"<a href=\"Http\/Requests\/Auth\/LoginRequest.php.html#43\">App\\Http\\Requests\\Auth\\LoginRequest::attributes<\/a>"],[0,1,"<a href=\"Http\/Requests\/Auth\/RegisterUserRequest.php.html#12\">App\\Http\\Requests\\Auth\\RegisterUserRequest::authorize<\/a>"],[0,1,"<a href=\"Http\/Requests\/Auth\/RegisterUserRequest.php.html#22\">App\\Http\\Requests\\Auth\\RegisterUserRequest::rules<\/a>"],[0,1,"<a href=\"Http\/Requests\/Auth\/RegisterUserRequest.php.html#33\">App\\Http\\Requests\\Auth\\RegisterUserRequest::messages<\/a>"],[0,1,"<a href=\"Http\/Requests\/Auth\/RegisterUserRequest.php.html#51\">App\\Http\\Requests\\Auth\\RegisterUserRequest::attributes<\/a>"],[0,1,"<a href=\"Http\/Requests\/Auth\/ValidateAccountRequest.php.html#12\">App\\Http\\Requests\\Auth\\ValidateAccountRequest::authorize<\/a>"],[0,1,"<a href=\"Http\/Requests\/Auth\/ValidateAccountRequest.php.html#22\">App\\Http\\Requests\\Auth\\ValidateAccountRequest::rules<\/a>"],[0,1,"<a href=\"Http\/Requests\/Auth\/ValidateAccountRequest.php.html#30\">App\\Http\\Requests\\Auth\\ValidateAccountRequest::messages<\/a>"],[0,1,"<a href=\"Http\/Requests\/Auth\/ValidateAccountRequest.php.html#39\">App\\Http\\Requests\\Auth\\ValidateAccountRequest::attributes<\/a>"],[100,1,"<a href=\"Http\/Requests\/Space\/ListSpacesRequest.php.html#12\">App\\Http\\Requests\\Space\\ListSpacesRequest::authorize<\/a>"],[100,1,"<a href=\"Http\/Requests\/Space\/ListSpacesRequest.php.html#22\">App\\Http\\Requests\\Space\\ListSpacesRequest::rules<\/a>"],[0,1,"<a href=\"Http\/Requests\/Space\/RegisterSpaceRequest.php.html#12\">App\\Http\\Requests\\Space\\RegisterSpaceRequest::authorize<\/a>"],[0,1,"<a href=\"Http\/Requests\/Space\/RegisterSpaceRequest.php.html#22\">App\\Http\\Requests\\Space\\RegisterSpaceRequest::rules<\/a>"],[0,1,"<a href=\"Http\/Requests\/Space\/RegisterSpaceRequest.php.html#35\">App\\Http\\Requests\\Space\\RegisterSpaceRequest::attributes<\/a>"],[0,1,"<a href=\"Http\/Requests\/Space\/RegisterSpaceRequest.php.html#48\">App\\Http\\Requests\\Space\\RegisterSpaceRequest::messages<\/a>"],[0,1,"<a href=\"Http\/Requests\/Space\/UpdateSpaceRequest.php.html#12\">App\\Http\\Requests\\Space\\UpdateSpaceRequest::authorize<\/a>"],[0,1,"<a href=\"Http\/Requests\/Space\/UpdateSpaceRequest.php.html#22\">App\\Http\\Requests\\Space\\UpdateSpaceRequest::rules<\/a>"],[0,1,"<a href=\"Http\/Requests\/Space\/UpdateSpaceRequest.php.html#36\">App\\Http\\Requests\\Space\\UpdateSpaceRequest::messages<\/a>"],[0,1,"<a href=\"Http\/Requests\/Space\/UpdateSpaceRequest.php.html#53\">App\\Http\\Requests\\Space\\UpdateSpaceRequest::attributes<\/a>"],[100,2,"<a href=\"Models\/PricingRule.php.html#36\">App\\Models\\PricingRule::booted<\/a>"],[100,1,"<a href=\"Models\/Role.php.html#14\">App\\Models\\Role::boot<\/a>"],[0,1,"<a href=\"Models\/Role.php.html#23\">App\\Models\\Role::users<\/a>"],[100,1,"<a href=\"Models\/Space.php.html#32\">App\\Models\\Space::booted<\/a>"],[0,1,"<a href=\"Models\/Space.php.html#40\">App\\Models\\Space::getRouteKeyName<\/a>"],[0,1,"<a href=\"Models\/Space.php.html#45\">App\\Models\\Space::spaceType<\/a>"],[0,1,"<a href=\"Models\/Space.php.html#50\">App\\Models\\Space::status<\/a>"],[0,1,"<a href=\"Models\/Space.php.html#55\">App\\Models\\Space::pricingRule<\/a>"],[100,2,"<a href=\"Models\/SpaceType.php.html#15\">App\\Models\\SpaceType::booted<\/a>"],[100,1,"<a href=\"Models\/Status.php.html#17\">App\\Models\\Status::boot<\/a>"],[100,1,"<a href=\"Models\/User.php.html#50\">App\\Models\\User::casts<\/a>"],[100,1,"<a href=\"Models\/User.php.html#58\">App\\Models\\User::booted<\/a>"],[100,1,"<a href=\"Models\/User.php.html#71\">App\\Models\\User::role<\/a>"],[0,1,"<a href=\"Models\/User.php.html#76\">App\\Models\\User::status<\/a>"],[100,1,"<a href=\"Models\/User.php.html#81\">App\\Models\\User::activationToken<\/a>"],[0,2,"<a href=\"Models\/User.php.html#86\">App\\Models\\User::activate<\/a>"],[25,5,"<a href=\"Models\/User.php.html#95\">App\\Models\\User::assingInitialRoleAndStatus<\/a>"],[100,2,"<a href=\"Models\/User.php.html#110\">App\\Models\\User::assignTokenVerification<\/a>"],[0,1,"<a href=\"Models\/User.php.html#124\">App\\Models\\User::isActive<\/a>"],[100,1,"<a href=\"Models\/User.php.html#130\">App\\Models\\User::getJWTIdentifier<\/a>"],[100,1,"<a href=\"Models\/User.php.html#135\">App\\Models\\User::getJWTCustomClaims<\/a>"],[0,1,"<a href=\"Models\/User.php.html#140\">App\\Models\\User::isValidPassword<\/a>"],[0,1,"<a href=\"Models\/UserActivationToken.php.html#29\">App\\Models\\UserActivationToken::user<\/a>"],[0,1,"<a href=\"Models\/UserActivationToken.php.html#34\">App\\Models\\UserActivationToken::isExpired<\/a>"],[0,1,"<a href=\"Models\/UserActivationToken.php.html#40\">App\\Models\\UserActivationToken::isUsed<\/a>"],[0,1,"<a href=\"Models\/UserActivationToken.php.html#45\">App\\Models\\UserActivationToken::isValidated<\/a>"],[0,1,"<a href=\"Models\/UserActivationToken.php.html#50\">App\\Models\\UserActivationToken::isValidCode<\/a>"],[0,1,"<a href=\"Notifications\/Auth\/UserRegisteredNotificacion.php.html#18\">App\\Notifications\\Auth\\UserRegisteredNotificacion::__construct<\/a>"],[0,1,"<a href=\"Notifications\/Auth\/UserRegisteredNotificacion.php.html#28\">App\\Notifications\\Auth\\UserRegisteredNotificacion::via<\/a>"],[0,1,"<a href=\"Notifications\/Auth\/UserRegisteredNotificacion.php.html#36\">App\\Notifications\\Auth\\UserRegisteredNotificacion::toMail<\/a>"],[0,1,"<a href=\"Notifications\/Auth\/UserRegisteredNotificacion.php.html#50\">App\\Notifications\\Auth\\UserRegisteredNotificacion::toArray<\/a>"],[100,1,"<a href=\"Providers\/AppServiceProvider.php.html#12\">App\\Providers\\AppServiceProvider::register<\/a>"],[100,1,"<a href=\"Providers\/AppServiceProvider.php.html#20\">App\\Providers\\AppServiceProvider::boot<\/a>"],[100,1,"<a href=\"Repositories\/BaseRepository.php.html#11\">Repositories\\BaseRepository::isModelValid<\/a>"],[0,2,"<a href=\"Repositories\/BaseRepository.php.html#16\">Repositories\\BaseRepository::insert<\/a>"],[0,2,"<a href=\"Repositories\/BaseRepository.php.html#22\">Repositories\\BaseRepository::getAll<\/a>"],[0,2,"<a href=\"Repositories\/BaseRepository.php.html#28\">Repositories\\BaseRepository::getBy<\/a>"],[100,2,"<a href=\"Repositories\/BaseRepository.php.html#34\">Repositories\\BaseRepository::getOneBy<\/a>"],[0,2,"<a href=\"Repositories\/BaseRepository.php.html#41\">Repositories\\BaseRepository::update<\/a>"],[0,1,"<a href=\"Repositories\/SpaceRepository.php.html#13\">Repositories\\SpaceRepository::create<\/a>"],[0,1,"<a href=\"Repositories\/SpaceRepository.php.html#20\">Repositories\\SpaceRepository::all<\/a>"],[0,1,"<a href=\"Repositories\/SpaceRepository.php.html#25\">Repositories\\SpaceRepository::search<\/a>"],[100,4,"<a href=\"Repositories\/SpaceRepository.php.html#30\">Repositories\\SpaceRepository::paginate<\/a>"],[0,3,"<a href=\"Repositories\/SpaceRepository.php.html#49\">Repositories\\SpaceRepository::updateSpace<\/a>"],[100,1,"<a href=\"Repositories\/SpaceRepository.php.html#61\">Repositories\\SpaceRepository::findByUuid<\/a>"],[0,3,"<a href=\"Repositories\/TokenRepository.php.html#10\">Repositories\\TokenRepository::getByToken<\/a>"],[0,3,"<a href=\"Repositories\/UserRepository.php.html#17\">Repositories\\UserRepository::createNewUser<\/a>"],[0,1,"<a href=\"Repositories\/UserRepository.php.html#25\">Repositories\\UserRepository::updateUser<\/a>"],[0,2,"<a href=\"Repositories\/UserRepository.php.html#30\">Repositories\\UserRepository::activateUser<\/a>"],[0,1,"<a href=\"Repositories\/UserRepository.php.html#37\">Repositories\\UserRepository::updateLastLoginAt<\/a>"],[100,1,"<a href=\"UseCases\/SpaceUseCases.php.html#12\">UseCases\\SpaceUseCases::__construct<\/a>"],[0,3,"<a href=\"UseCases\/SpaceUseCases.php.html#20\">UseCases\\SpaceUseCases::register<\/a>"],[0,3,"<a href=\"UseCases\/SpaceUseCases.php.html#46\">UseCases\\SpaceUseCases::update<\/a>"],[100,2,"<a href=\"UseCases\/SpaceUseCases.php.html#73\">UseCases\\SpaceUseCases::list<\/a>"],[100,4,"<a href=\"UseCases\/SpaceUseCases.php.html#83\">UseCases\\SpaceUseCases::find<\/a>"],[0,1,"<a href=\"UseCases\/UserUseCases.php.html#23\">UseCases\\UserUseCases::__construct<\/a>"],[0,3,"<a href=\"UseCases\/UserUseCases.php.html#28\">UseCases\\UserUseCases::registerNewUser<\/a>"],[0,12,"<a href=\"UseCases\/UserUseCases.php.html#43\">UseCases\\UserUseCases::activateAccount<\/a>"],[0,5,"<a href=\"UseCases\/UserUseCases.php.html#78\">UseCases\\UserUseCases::login<\/a>"],[0,2,"<a href=\"UseCases\/UserUseCases.php.html#101\">UseCases\\UserUseCases::logout<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

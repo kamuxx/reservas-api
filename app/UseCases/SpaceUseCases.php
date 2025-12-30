@@ -69,4 +69,29 @@ class SpaceUseCases
             ]);
         });
     }
+
+    public function list(array $filters, bool $isAdmin = false)
+    {
+        if (!$isAdmin) {
+            $filters['is_active'] = true;
+        }
+
+        $perPage = $filters['per_page'] ?? 15;
+        return $this->spaceRepository::paginate($filters, $perPage);
+    }
+
+    public function find(string $id, bool $isAdmin = false): ?Space
+    {
+        $space = $this->spaceRepository::findByUuid($id);
+
+        if (!$space) {
+            return null;
+        }
+
+        if (!$isAdmin && !$space->is_active) {
+            return null;
+        }
+
+        return $space;
+    }
 }

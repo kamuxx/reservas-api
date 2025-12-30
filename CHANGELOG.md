@@ -7,6 +7,21 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [Unreleased]
 
+## [0.7.0] - 2025-12-30
+
+### 🚀 Añadido
+- **Gestión de Espacios - Consultas (HU-007):** Implementación de listado y detalle de espacios.
+    - Endpoints: 
+        - `GET /api/spaces`: Listado público con filtros (capacidad, tipo) y paginación. Los usuarios comunes solo ven espacios activos.
+        - `GET /api/spaces/{uuid}`: Detalle de espacio. Los usuarios comunes solo ven detalles de espacios activos. Los administradores pueden ver cualquier espacio.
+    - Testing: Suites completas en `ListSpacesTest` y `ShowSpaceTest` cubriendo:
+        - Listado exitoso para públicos y admins.
+        - Filtrado por capacidad y tipo de espacio.
+        - Paginación de resultados.
+        - Consulta de detalle con reglas de visibilidad (is_active).
+        - Manejo de errores 404 para espacios inexistentes o inactivos (para no-admins).
+        - Validación de parámetros de consulta (422).
+
 ## [0.6.0] - 2025-12-30
 
 ### 🚀 Añadido

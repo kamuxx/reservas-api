@@ -62,24 +62,24 @@
 | TP-HU006-003 ✅ | FA-002 | Espacio no encontrado | - | id: 999 (inexistente) | 1. Enviar PUT /api/spaces/999 | HTTP 404 Not Found | Valida existencia del espacio |
 | TP-HU006-004 ✅ | FS-001 | Usuario no administrador | 1. Cliente autenticado<br>2. Espacio existente | - | 1. Cliente intenta PUT /api/spaces/1 | HTTP 403 Forbidden | Solo admins pueden modificar |
 
-### HU-007-UC-001: Consulta de Listado de Espacios
+### HU-007-UC-001: Consulta de Listado de Espacios ✅
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|
-| TP-HU007-001 | FP | Listado exitoso (usuario no autenticado) | 1. Espacios activos en BD | - | 1. Enviar GET /api/spaces sin autenticación | HTTP 200 OK<br>Lista solo espacios con is_active=true<br>Paginación aplicada | Muestra espacios públicos |
-| TP-HU007-002 | FP | Listado admin ve todos | 1. Admin autenticado<br>2. Espacios activos e inactivos | - | 1. Enviar GET /api/spaces con JWT admin | HTTP 200 OK<br>Lista todos los espacios (activos e inactivos) | Admin ve todos los espacios |
-| TP-HU007-003 | FA-001 | Filtros sin resultados | 1. Espacios existentes | capacity: 100 (mínimo alto)<br>space_type_id: 99 (inexistente) | 1. Enviar GET /api/spaces?capacity=100<br>2. Enviar GET /api/spaces?space_type_id=99 | HTTP 200 OK<br>Lista vacía en ambos casos | Maneja conjuntos vacíos |
-| TP-HU007-004 | FA-002 | Parámetros inválidos | - | capacity: "abc" (no numérico)<br>page: -1 (negativo) | 1. Enviar GET /api/spaces?capacity=abc<br>2. Enviar GET /api/spaces?page=-1 | HTTP 400 Bad Request<br>Mensajes de error apropiados | Valida parámetros |
-| TP-HU007-005 | FS-001 | Cliente no ve inactivos | 1. Espacios inactivos existentes<br>2. Cliente autenticado | - | 1. Cliente envía GET /api/spaces | No incluye espacios con is_active=false | Filtro automático aplicado |
+| TP-HU007-001 ✅ | FP | Listado exitoso (usuario no autenticado) | 1. Espacios activos en BD | - | 1. Enviar GET /api/spaces sin autenticación | HTTP 200 OK<br>Lista solo espacios con is_active=true<br>Paginación aplicada | Muestra espacios públicos |
+| TP-HU007-002 ✅ | FP | Listado admin ve todos | 1. Admin autenticado<br>2. Espacios activos e inactivos | - | 1. Enviar GET /api/spaces con JWT admin | HTTP 200 OK<br>Lista todos los espacios (activos e inactivos) | Admin ve todos los espacios |
+| TP-HU007-003 ✅ | FA-001 | Filtros sin resultados | 1. Espacios existentes | capacity: 100 (mínimo alto)<br>space_type_id: 99 (inexistente) | 1. Enviar GET /api/spaces?capacity=100<br>2. Enviar GET /api/spaces?space_type_id=99 | HTTP 200 OK<br>Lista vacía en ambos casos | Maneja conjuntos vacíos |
+| TP-HU007-004 ✅ | FA-002 | Parámetros inválidos | - | capacity: "abc" (no numérico)<br>page: -1 (negativo) | 1. Enviar GET /api/spaces?capacity=abc<br>2. Enviar GET /api/spaces?page=-1 | HTTP 422 Unprocessable Entity<br>Mensajes de error apropiados | Valida parámetros |
+| TP-HU007-005 ✅ | FS-001 | Cliente no ve inactivos | 1. Espacios inactivos existentes<br>2. Cliente autenticado | - | 1. Cliente envía GET /api/spaces | No incluye espacios con is_active=false | Filtro automático aplicado |
 
-### HU-007-UC-002: Consulta de Detalle de Espacio
+### HU-007-UC-002: Consulta de Detalle de Espacio ✅
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|
-| TP-HU007-006 | FP | Detalle espacio activo (cualquier usuario) | 1. Espacio con is_active=true | id: 1 | 1. Enviar GET /api/spaces/1 sin autenticación | HTTP 200 OK<br>Detalles completos del espacio | Acceso público a activos |
-| TP-HU007-007 | FA-001 | Espacio inactivo, usuario no admin | 1. Espacio con is_active=false<br>2. Cliente o no autenticado | id: 2 (inactivo) | 1. GET /api/spaces/2 como cliente/no auth | HTTP 404 Not Found (aunque exista) | Oculta existencia de inactivos |
-| TP-HU007-008 | FA-002 | Espacio no existe | - | id: 999 | 1. GET /api/spaces/999 | HTTP 404 Not Found | Manejo consistente |
-| TP-HU007-009 | FS-001 | Admin ve espacio inactivo | 1. Espacio inactivo<br>2. Admin autenticado | id: 2 (inactivo) | 1. GET /api/spaces/2 como admin | HTTP 200 OK<br>Detalles del espacio inactivo | Admin ve todos |
+| TP-HU007-006 ✅ | FP | Detalle espacio activo (cualquier usuario) | 1. Espacio con is_active=true | id: 1 | 1. Enviar GET /api/spaces/1 sin autenticación | HTTP 200 OK<br>Detalles completos del espacio | Acceso público a activos |
+| TP-HU007-007 ✅ | FA-001 | Espacio inactivo, usuario no admin | 1. Espacio con is_active=false<br>2. Cliente o no autenticado | id: 2 (inactivo) | 1. GET /api/spaces/2 como cliente/no auth | HTTP 404 Not Found (aunque exista) | Oculta existencia de inactivos |
+| TP-HU007-008 ✅ | FA-002 | Espacio no existe | - | id: 999 | 1. GET /api/spaces/999 | HTTP 404 Not Found | Manejo consistente |
+| TP-HU007-009 ✅ | FS-001 | Admin ve espacio inactivo | 1. Espacio inactivo<br>2. Admin autenticado | id: 2 (inactivo) | 1. GET /api/spaces/2 como admin | HTTP 200 OK<br>Detalles del espacio inactivo | Admin ve todos |
 
 ### HU-008-UC-001: Consulta de Disponibilidad de Espacio
 

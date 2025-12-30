@@ -56,6 +56,7 @@ abstract class Controller
     protected function error(int $statusCode, string $message, ?array $errors): JsonResponse
     {
         $output = [];
+        $output["status"] = "error";
         $output["message"] = $message;
         if (is_array($errors) && !empty($errors))
             $output["errors"] = $errors;

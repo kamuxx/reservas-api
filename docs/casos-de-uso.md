@@ -10,8 +10,8 @@
 | HU-004-UC-001 | Cierre de Sesión (Logout) | HU-004 | ✅ Completado | Invalidar de forma segura la sesión actual | El usuario cierra su sesión invalidando el JWT en el servidor |
 | HU-005-UC-001 | Creación de Espacio (Admin) | HU-005 | ✅ Completado | Permitir a administradores añadir nuevos espacios | Un administrador crea un nuevo registro en la entidad `spaces` |
 | HU-006-UC-001 | Modificación de Espacio (Admin) | HU-006 | ✅ Completado | Permitir a administradores actualizar información de espacios | Un administrador actualiza atributos de un espacio existente |
-| HU-007-UC-001 | Consulta de Listado de Espacios | HU-007 | ⏳ Pendiente | Permitir visualizar espacios disponibles | Cualquier usuario (autenticado o no) lista espacios con filtros |
-| HU-007-UC-002 | Consulta de Detalle de Espacio | HU-007 | ⏳ Pendiente | Ver información detallada de un espacio | Consulta individual de un espacio con reglas de autorización |
+| HU-007-UC-001 | Consulta de Listado de Espacios | HU-007 | ✅ Completado | Permitir visualizar espacios disponibles | Cualquier usuario (autenticado o no) lista espacios con filtros |
+| HU-007-UC-002 | Consulta de Detalle de Espacio | HU-007 | ✅ Completado | Ver información detallada de un espacio | Consulta individual de un espacio con reglas de autorización |
 | HU-008-UC-001 | Consulta de Disponibilidad de Espacio | HU-008 | ⏳ Pendiente | Informar sobre horarios disponibles/ocupados | Usuario autenticado consulta bloques de tiempo para un espacio |
 | HU-009-UC-001 | Creación de Reserva con Validación Atómica | HU-009 | ⏳ Pendiente | Formalizar reserva de espacio verificando disponibilidad | Cliente crea reserva con validación atómica de solapamiento |
 | HU-010-UC-001 | Cancelación de Reserva por Cliente | HU-010 | ⏳ Pendiente | Permitir anulación de reservas propias | Cliente cancela una reserva confirmada de su propiedad |

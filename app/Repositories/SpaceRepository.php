@@ -3,6 +3,7 @@
 namespace Repositories;
 
 use App\Models\Space;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class SpaceRepository extends BaseRepository
@@ -16,14 +17,33 @@ class SpaceRepository extends BaseRepository
         });
     }
 
-    public static function all(): array
+    public static function all(): Collection
     {
         return self::getAll(self::MODEL);
     }
 
     public static function search(array $filters): ?array
     {
-        return self::getBy(self::MODEL,$filters);
+        return self::getBy(self::MODEL,$filters)->toArray();
+    }
+
+    public static function paginate(array $filters, int $perPage = 15)
+    {
+        $query = self::MODEL::query();
+
+        if (isset($filters['capacity'])) {
+            $query->where('capacity', '>=', $filters['capacity']);
+        }
+
+        if (isset($filters['spaces_type_id'])) {
+            $query->where('spaces_type_id', $filters['spaces_type_id']);
+        }
+
+        if (isset($filters['is_active'])) {
+            $query->where('is_active', $filters['is_active']);
+        }
+
+        return $query->paginate($perPage);
     }
 
     public static function updateSpace(array $filters, array $data): ?Space
@@ -36,6 +56,11 @@ class SpaceRepository extends BaseRepository
             }
             return $space;
         });
+    }
+
+    public static function findByUuid(string $uuid): ?Space
+    {
+        return self::getOneBy(self::MODEL, ['uuid' => $uuid]);
     }
 
 }
