@@ -27,8 +27,6 @@ class Space extends Model
 
     protected $hidden = [
         'id',
-        'created_at',
-        'updated_at',
     ];
 
     protected static function booted()

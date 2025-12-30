@@ -23,12 +23,12 @@ class RegisterSpaceRequest extends FormRequest
     {
         return [
             "name" => "required|string|unique:spaces,name|max:255",
-            "description" => "nullable|string|max:255",
+            "description" => "required|string|max:255",
             "capacity" => "required|integer|min:1",
             "spaces_type_id" => "required|string|exists:space_types,uuid",
             "status_id" => "required|string|exists:status,uuid",
             "pricing_rule_id" => "required|string|exists:pricing_rules,uuid",
-            "is_active" => "boolean",
+            "is_active" => "required|boolean",
         ];
     }
 

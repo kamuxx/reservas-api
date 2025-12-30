@@ -72,7 +72,8 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
 ---
 ## Dominio: Gestión de Espacios
 
-### HU-005: Creación de un Espacio (Admin)
+### HU-005: Creación de un Espacio (Admin) ![Estado: Completado](https://img.shields.io/badge/Estado-Completado-success)
+- **Estado de Desarrollo:** ✅ Implementado y Testeado (v0.4.0)
 - **Dominio funcional:** Espacios
 - **Objetivo de negocio:** Permitir a los administradores añadir nuevos espacios al catálogo de la plataforma.
 - **Alcance funcional:**
@@ -80,16 +81,17 @@ Este documento define el comportamiento de la API REST del sistema de reserva de
     - **Excluye:** Carga de imágenes para el espacio (definido en HU-009).
 - **Reglas de negocio estrictas:**
     1. La petición debe ser realizada por un usuario autenticado con rol `administrador`.
-    2. La petición debe contener `name`, `description`, `capacity`, `is_active` y `space_type_id`.
+    2. La petición debe contener `name`, `description`, `capacity`, `is_active`, `spaces_type_id`, `status_id` y `pricing_rule_id`.
     3. El `name` debe ser único en la tabla `spaces`.
     4. `capacity` debe ser un entero mayor que 0.
-    5. `space_type_id` debe ser un ID válido existente en la tabla `space_types`.
+    5. `spaces_type_id`, `status_id` y `pricing_rule_id` deben ser IDs válidos (UUID) existentes en sus respectivas tablas.
     6. Una creación exitosa retornará el recurso completo del espacio creado con un código de estado 201.
 - **Estados del dominio involucrados:**
     - `space.is_active`: `true`, `false`.
 - **Condición de completitud de la HU:** La HU está completa cuando el endpoint `POST /api/spaces` está implementado y protegido por el control de acceso basado en roles.
 
-### HU-006: Modificación de un Espacio (Admin)
+### HU-006: Modificación de un Espacio (Admin) ![Estado: Completado](https://img.shields.io/badge/Estado-Completado-success)
+- **Estado de Desarrollo:** ✅ Implementado y Testeado (v0.5.0)
 - **Dominio funcional:** Espacios
 - **Objetivo de negocio:** Permitir a los administradores actualizar la información de los espacios existentes.
 - **Alcance funcional:**

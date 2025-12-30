@@ -46,21 +46,21 @@
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|
-| TP-HU005-001 ✅ | FP | Creación exitosa espacio | 1. Usuario administrador autenticado<br>2. space_types existentes | name: "Sala A"<br>description: "Sala grande"<br>capacity: 20<br>is_active: true<br>space_type_id: 1 | 1. Enviar POST /api/spaces with JWT admin<br>2. Verificar creación | HTTP 201 Created<br>Espacio creado en BD<br>Audit trail registrado | Admin puede crear espacios |
-| TP-HU005-002 ✅ | FA-001 | Nombre duplicado | 1. Espacio "Sala A" ya existe | name: "Sala A" (duplicado) | 1. Enviar POST /api/spaces con nombre existente | HTTP 409 Conflict<br>Mensaje "Nombre ya en uso" | Previene duplicados de nombre |
-| TP-HU005-003 ✅ | FA-002 | Capacity inválida | - | capacity: 0<br>capacity: -5 | 1. Enviar POST /api/spaces con capacity inválida | HTTP 400 Bad Request<br>Mensaje "Capacity debe ser >0" | Valida capacity positiva |
-| TP-HU005-004 ✅ | FA-003 | space_type_id no existe | - | space_type_id: 999 | 1. Enviar POST /api/spaces con type inexistente | HTTP 400/404<br>Mensaje "Tipo de espacio no válido" | Valida referencias |
+| TP-HU005-001 ✅ | FP | Creación exitosa espacio | 1. Usuario administrador autenticado<br>2. space_types, status y pricing_rules existentes | name: "Sala A"<br>description: "Sala grande"<br>capacity: 20<br>is_active: true<br>spaces_type_id: uuid<br>status_id: uuid<br>pricing_rule_id: uuid | 1. Enviar POST /api/spaces with JWT admin<br>2. Verificar creación | HTTP 201 Created<br>Espacio creado en BD<br>Audit trail registrado | Admin puede crear espacios |
+| TP-HU005-002 ✅ | FA-001 | Nombre duplicado | 1. Espacio "Sala A" ya existe | name: "Sala A" (duplicado) | 1. Enviar POST /api/spaces con nombre existente | HTTP 422 Unprocessable Entity<br>Mensaje "El nombre del espacio ya ha sido tomado." | Previene duplicados de nombre |
+| TP-HU005-003 ✅ | FA-002 | Capacity inválida | - | capacity: 0<br>capacity: -5 | 1. Enviar POST /api/spaces con capacity inválida | HTTP 422 Unprocessable Entity<br>Mensaje "La capacidad debe ser al menos 1." | Valida capacity positiva |
+| TP-HU005-004 ✅ | FA-003 | spaces_type_id no existe | - | spaces_type_id: 999 | 1. Enviar POST /api/spaces con type inexistente | HTTP 422 Unprocessable Entity<br>Mensaje "El tipo de espacio seleccionado no es válido." | Valida referencias |
 | TP-HU005-005 ✅ | FS-001 | Usuario no administrador | 1. Usuario cliente autenticado | datos válidos | 1. Enviar POST /api/spaces con JWT cliente | HTTP 403 Forbidden | Solo admins pueden crear |
 | TP-HU005-006 ✅ | FS-002 | JWT inválido | - | JWT inválido o expirado | 1. Enviar POST /api/spaces sin autenticación válida | HTTP 401 Unauthorized | Requiere autenticación |
 
-### HU-006-UC-001: Modificación de Espacio (Admin)
+### HU-006-UC-001: Modificación de Espacio (Admin) ✅
 
 | ID Prueba | Flujo | Descripción | Precondiciones | Datos de Entrada | Pasos de Ejecución | Resultado Esperado | Criterios de Aceptación |
 |-----------|-------|-------------|----------------|------------------|-------------------|-------------------|-------------------------|
-| TP-HU006-001 | FP | Modificación exitosa | 1. Admin autenticado<br>2. Espacio existente | id: 1<br>name: "Sala A Modificado"<br>capacity: 25 | 1. Enviar PUT /api/spaces/1 con cambios<br>2. Verificar actualización | HTTP 200 OK<br>Espacio actualizado<br>updated_at modificado | Admin puede modificar espacios |
-| TP-HU006-002 | FA-001 | Nombre duplicado al cambiar | 1. Espacio "Sala B" existe<br>2. Modificando espacio 1 | name: "Sala B" (nombre de otro espacio) | 1. Enviar PUT /api/spaces/1 con nombre duplicado | HTTP 409 Conflict<br>Mensaje "Nombre ya en uso" | Previene nombres duplicados |
-| TP-HU006-003 | FA-002 | Espacio no encontrado | - | id: 999 (inexistente) | 1. Enviar PUT /api/spaces/999 | HTTP 404 Not Found | Valida existencia del espacio |
-| TP-HU006-004 | FS-001 | Usuario no administrador | 1. Cliente autenticado<br>2. Espacio existente | - | 1. Cliente intenta PUT /api/spaces/1 | HTTP 403 Forbidden | Solo admins pueden modificar |
+| TP-HU006-001 ✅ | FP | Modificación exitosa | 1. Admin autenticado<br>2. Espacio existente | id: 1<br>name: "Sala A Modificado"<br>capacity: 25 | 1. Enviar PUT /api/spaces/1 con cambios<br>2. Verificar actualización | HTTP 200 OK<br>Espacio actualizado<br>updated_at modificado | Admin puede modificar espacios |
+| TP-HU006-002 ✅ | FA-001 | Nombre duplicado al cambiar | 1. Espacio "Sala B" existe<br>2. Modificando espacio 1 | name: "Sala B" (nombre de otro espacio) | 1. Enviar PUT /api/spaces/1 con nombre duplicado | HTTP 422 Unprocessable Entity<br>Mensaje "Nombre ya en uso" | Previene nombres duplicados |
+| TP-HU006-003 ✅ | FA-002 | Espacio no encontrado | - | id: 999 (inexistente) | 1. Enviar PUT /api/spaces/999 | HTTP 404 Not Found | Valida existencia del espacio |
+| TP-HU006-004 ✅ | FS-001 | Usuario no administrador | 1. Cliente autenticado<br>2. Espacio existente | - | 1. Cliente intenta PUT /api/spaces/1 | HTTP 403 Forbidden | Solo admins pueden modificar |
 
 ### HU-007-UC-001: Consulta de Listado de Espacios
 

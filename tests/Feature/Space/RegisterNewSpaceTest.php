@@ -374,6 +374,29 @@ class RegisterNewSpaceTest extends TestCase
         $this->assertArrayHasKey('capacity', $content['errors']);
     }
 
+    public function test_register_new_space_fails_if_required_fields_missing(): void
+    {
+        $this->seed(UserAdminSeeder::class);
+        $loginResponse = $this->postJson('/api/auth/login', [
+            'email' => 'admin@admin.com',
+            'password' => 'Admin@123',
+        ]);
+        $token = $loginResponse->json()['data']['access_token'];
+
+        $response = $this->withToken($token)->postJson('/api/spaces', [
+            'name' => 'Missing Fields Space',
+            // description is missing
+            'capacity' => 10,
+            'spaces_type_id' => SpaceType::first()->uuid,
+            'status_id' => Status::first()->uuid,
+            'pricing_rule_id' => PricingRule::first()->uuid,
+            // is_active is missing
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['description', 'is_active']);
+    }
+
     public function test_register_new_space_with_non_admin_user(): void
     {
         $user = User::factory()->create();

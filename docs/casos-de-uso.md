@@ -9,7 +9,7 @@
 | HU-003-UC-001 | Autenticación de Usuario (Login) | HU-003 | ✅ Completado | Permitir acceso al sistema a usuarios registrados y activos | El usuario ingresa sus credenciales para obtener un token JWT |
 | HU-004-UC-001 | Cierre de Sesión (Logout) | HU-004 | ✅ Completado | Invalidar de forma segura la sesión actual | El usuario cierra su sesión invalidando el JWT en el servidor |
 | HU-005-UC-001 | Creación de Espacio (Admin) | HU-005 | ✅ Completado | Permitir a administradores añadir nuevos espacios | Un administrador crea un nuevo registro en la entidad `spaces` |
-| HU-006-UC-001 | Modificación de Espacio (Admin) | HU-006 | ⏳ Pendiente | Permitir a administradores actualizar información de espacios | Un administrador actualiza atributos de un espacio existente |
+| HU-006-UC-001 | Modificación de Espacio (Admin) | HU-006 | ✅ Completado | Permitir a administradores actualizar información de espacios | Un administrador actualiza atributos de un espacio existente |
 | HU-007-UC-001 | Consulta de Listado de Espacios | HU-007 | ⏳ Pendiente | Permitir visualizar espacios disponibles | Cualquier usuario (autenticado o no) lista espacios con filtros |
 | HU-007-UC-002 | Consulta de Detalle de Espacio | HU-007 | ⏳ Pendiente | Ver información detallada de un espacio | Consulta individual de un espacio con reglas de autorización |
 | HU-008-UC-001 | Consulta de Disponibilidad de Espacio | HU-008 | ⏳ Pendiente | Informar sobre horarios disponibles/ocupados | Usuario autenticado consulta bloques de tiempo para un espacio |
@@ -257,16 +257,15 @@ Justificación: Tras logout, el usuario deberá autenticarse nuevamente para acc
 ### Desarrollo
 #### Acciones del Usuario/Cliente API
 1. Administrador envía `POST /api/spaces` con JWT en header
-2. JSON body contiene: `name`, `description`, `capacity`, `is_active`, `space_type_id`
+2. JSON body contiene: `name`, `description`, `capacity`, `is_active`, `spaces_type_id`, `status_id`, `pricing_rule_id`
 
 #### Respuestas del Sistema
 3. Verifica JWT y rol de administrador
 4. Valida unicidad de `name` en tabla `spaces`
 5. Valida que `capacity` > 0
-6. Valida que `space_type_id` exista en `space_types`
-7. Valida referencias a `locations` y `pricing_rules` si aplican
-8. Crea registro en tabla `spaces`
-9. Retorna recurso creado con HTTP 201
+6. Valida que `spaces_type_id`, `status_id` y `pricing_rule_id` existan en sus respectivas tablas
+7. Crea registro en tabla `spaces`
+8. Retorna recurso creado con HTTP 201
 
 ### Flujos Cubiertos
 #### Flujo Principal (HU-005-UC-001-FP)
@@ -277,15 +276,15 @@ Justificación: Tras logout, el usuario deberá autenticarse nuevamente para acc
 #### Flujos Alternos
 **HU-005-UC-001-FA-001: Nombre duplicado**
 1. `name` ya existe en `spaces`
-2. Sistema retorna error 409 Conflict
+2. Sistema retorna error 422 Unprocessable Entity
 
 **HU-005-UC-001-FA-002: Capacity no válida**
 1. `capacity` <= 0
-2. Sistema retorna error 400 Bad Request
+2. Sistema retorna error 422 Unprocessable Entity
 
-**HU-005-UC-001-FA-003: space_type_id no existe**
+**HU-005-UC-001-FA-003: spaces_type_id no existe**
 1. Referencia a `space_types` inválida
-2. Sistema retorna error 400/404
+2. Sistema retorna error 422 Unprocessable Entity
 
 #### Flujos de Seguridad
 **HU-005-UC-001-FS-001: Usuario no administrador**
