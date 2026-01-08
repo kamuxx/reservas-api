@@ -14,6 +14,7 @@ class StatusSeeder extends Seeder
      */
     public function run(): void
     {
+        Status::truncate();
         $statuses = [
             ['uuid' => (string) Str::uuid(), 'name' => 'active'],
             ['uuid' => (string) Str::uuid(), 'name' => 'inactive'],

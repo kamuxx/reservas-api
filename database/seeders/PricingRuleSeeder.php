@@ -13,6 +13,7 @@ class PricingRuleSeeder extends Seeder
      */
     public function run(): void
     {
+        PricingRule::truncate();
         $rules = [
             [
                 'name' => 'Estándar',

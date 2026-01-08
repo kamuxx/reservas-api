@@ -120,7 +120,7 @@ class SpaceRepositoryTest extends TestCase
         $this->assertEquals('Space 1', $result->name);
     }
 
-    public function test_get_available_spaces(): void
+public function test_get_available_spaces(): void
     {
         $uuid = (string) Str::uuid();
         Space::create([
@@ -136,8 +136,11 @@ class SpaceRepositoryTest extends TestCase
 
         // Mock status 'cancelada'
         Status::create(['name' => 'cancelada', 'uuid' => (string) Str::uuid()]);
-
-        $result = SpaceRepository::getAvailableSpaces('2025-01-01', $this->spaceType->uuid);
+        
+        $result = SpaceRepository::getAvailableSpaces([
+            'fecha_deseada' => '2025-01-01',
+            'space_type_id' => $this->spaceType->uuid
+        ]);
         $this->assertCount(1, $result);
     }
 
@@ -182,7 +185,9 @@ class SpaceRepositoryTest extends TestCase
             Status::create(['name' => 'cancelada', 'uuid' => (string) Str::uuid()]);
         }
 
-        $result = SpaceRepository::getAvailableSpaces('2025-01-01');
+        $result = SpaceRepository::getAvailableSpaces([
+            'fecha_deseada' => '2025-01-01'
+        ]);
         $this->assertGreaterThanOrEqual(1, $result->count());
     }
 }

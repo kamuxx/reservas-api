@@ -35,9 +35,10 @@ return new class extends Migration
         });
 
         Schema::create('space_images', function (Blueprint $table) {
-            $table->string('space_id')->unique();
+            $table->id();
+            $table->string('space_id', 36)->index();
             $table->string('image', 1000);
-            $table->string('is_main')->default(false);
+            $table->boolean('is_main')->default(false);
 
             //foreings
             $table->foreign('space_id')->references('uuid')->on('spaces')->onDelete('cascade');

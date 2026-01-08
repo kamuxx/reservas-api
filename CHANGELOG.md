@@ -7,6 +7,19 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-01-08
+
+### 🔧 Corregido
+- **Base de Datos:** Solucionado error de integridad "Duplicate entry" en `SpaceTableSeeder` al insertar imágenes.
+- **Arquitectura:** Resuelto conflicto fatal "Cannot redeclare class Repositories\UserRepository".
+- **Testing:**
+    - Corrección de scopes en pruebas unitarias de Espacios.
+    - Ajustes en `UserUseCasesTestFixed` para estabilidad.
+
+### 📚 Documentación
+- Actualización de `AGENTS.md` y `API_ROUTES.md` con detalles técnicos recientes.
+
+
 ## [1.0.0] - 2025-12-30
 
 ### 🚀 Añadido

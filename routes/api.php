@@ -30,6 +30,7 @@ Route::group(["prefix" => "auth"], function () {
     Route::group(["middleware" => "auth:api"], function () {
         Route::post("/logout", [AuthController::class, "logout"])->name("logout");
     });
+    
 });
 
 Route::group(["prefix" => "spaces"], function () {

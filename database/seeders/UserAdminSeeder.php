@@ -12,11 +12,13 @@ use Illuminate\Support\Str;
     
 class UserAdminSeeder extends Seeder
 {
+    
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        User::truncate();
         User::factory()->create([
             'name' => 'Admin',
             'uuid' => Str::uuid(),

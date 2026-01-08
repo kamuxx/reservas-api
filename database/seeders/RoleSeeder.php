@@ -14,6 +14,7 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+        Role::truncate();
         $roles = [
             ['uuid' => (string) Str::uuid(), 'name' => 'admin'],
             ['uuid' => (string) Str::uuid(), 'name' => 'user'],

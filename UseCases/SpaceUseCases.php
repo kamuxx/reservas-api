@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace UseCases;
 
@@ -13,7 +13,7 @@ class SpaceUseCases
     public function __construct(
         private SpaceRepository $spaceRepository,
         private ReservationRepository $reservationRepository
-    ){}
+    ) {}
 
     /**
      * Registra un nuevo espacio y su auditoría en una transacción.
@@ -53,7 +53,7 @@ class SpaceUseCases
             $user = auth('api')->user();
             $data['updated_by'] = $user->uuid;
             // 1. Actualizar el espacio
-            $spaceUpdated = $this->spaceRepository::updateSpace(['uuid' => $space->uuid],$data);
+            $spaceUpdated = $this->spaceRepository::updateSpace(['uuid' => $space->uuid], $data);
 
             // Validación de actualización (Consistente con el patrón del proyecto)
             if (!$spaceUpdated || !$spaceUpdated instanceof Space) {
@@ -74,12 +74,16 @@ class SpaceUseCases
         });
     }
 
-    public function list(array $filters, bool $isAdmin = false)
+public function list(array $filters, bool $isAdmin = false)
     {
         if (!$isAdmin) {
             $filters['is_active'] = true;
+            $perPage = $filters['per_page'] ?? 15;
+            return $this->spaceRepository::paginate($filters, $perPage);
         }
 
+        // For admin, get all spaces then paginate
+        $allSpaces = $this->spaceRepository::all();
         $perPage = $filters['per_page'] ?? 15;
         return $this->spaceRepository::paginate($filters, $perPage);
     }
@@ -119,9 +123,6 @@ class SpaceUseCases
      */
     public function getAvailableSpaces(array $filters)
     {
-        $date = $filters['fecha_deseada'];
-        $spaceTypeId = $filters['space_type_id'] ?? null;
-
-        return $this->spaceRepository::getAvailableSpaces($date, $spaceTypeId);
+        return $this->spaceRepository::getAvailableSpaces($filters);
     }
 }

@@ -24,6 +24,11 @@ class ListAvailableSpacesRequest extends FormRequest
         return [
             'fecha_deseada' => 'required|date_format:Y-m-d',
             'space_type_id' => 'nullable|uuid|exists:space_types,uuid',
+            'min_capacity' => 'nullable|integer|min:1',
+            'feature_ids' => 'nullable|array',
+            'feature_ids.*' => 'uuid|exists:features,uuid',
+            'min_price' => 'nullable|numeric|min:0',
+            'max_price' => 'nullable|numeric|min:0',
         ];
     }
 

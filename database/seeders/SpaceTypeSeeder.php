@@ -13,6 +13,7 @@ class SpaceTypeSeeder extends Seeder
      */
     public function run(): void
     {
+        SpaceType::truncate();
         $types = [
             'Sala de Reuniones Ejecutiva',
             'Auditorio de Conferencias',

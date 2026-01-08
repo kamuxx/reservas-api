@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
@@ -27,9 +28,10 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'uuid' => Str::uuid(),
             'email' => $this->faker->email(),
-            'password' => Hash::make('Tost@123'), 
-            'phone' => $this->faker->phoneNumber(),           
+            'password' => Hash::make('Tost@123'),
+            'phone' => $this->faker->phoneNumber(),
             'role_id' => Role::where('name', 'user')->first()->uuid,
             'status_id' => Status::where('name', 'active')->first()->uuid,
         ];
@@ -40,7 +42,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

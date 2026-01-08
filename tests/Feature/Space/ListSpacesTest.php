@@ -192,4 +192,19 @@ class ListSpacesTest extends TestCase
         $response = $this->getJson(route('spaces.index', ['page' => -1]));
         $response->assertStatus(422);
     }
+
+    public function test_can_search_spaces_by_name(): void
+    {
+        $this->markTestIncomplete('Pending implementation: Search by name/description');
+    }
+
+    public function test_admin_can_filter_spaces_by_status(): void
+    {
+        $this->markTestIncomplete('Pending implementation: Admin filtering by status_id');
+    }
+
+    public function test_response_includes_relations_features_and_images(): void
+    {
+        $this->markTestIncomplete('Pending implementation: Verify features and images are included in the response');
+    }
 }
