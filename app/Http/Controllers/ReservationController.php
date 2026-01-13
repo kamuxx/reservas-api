@@ -13,13 +13,61 @@ class ReservationController extends Controller
     public function __construct(private ReservationUseCases $reservationUseCases) {}
 
     /**
+     * Obtiene el listado de reservas del usuario.
+     */
+    public function index(): JsonResponse
+    {
+        try {
+            $user = auth('api')->user();
+
+            $reservations = $this->reservationUseCases->getByUser($user->uuid);
+
+            return $this->success(
+                200,
+                "Reservas obtenidas exitosamente",
+                $reservations->toArray()
+            );
+        } catch (\Exception $e) {
+            return $this->serverError($e, "Error al obtener las reservas");
+        }
+    }
+
+    /**
+     * Obtiene el detalle de una reserva específica.
+     */
+    public function show(string $id): JsonResponse
+    {
+        try {
+            $user = auth('api')->user();
+
+            // Cargar el rol si no está cargado
+            $user->load('role');
+            $roleName = $user->role->name ?? 'user';
+
+            $reservation = $this->reservationUseCases->getDetail($id, $user->uuid, $roleName);
+
+            return $this->success(
+                200,
+                "Detalle de reserva obtenido exitosamente",
+                $reservation->toArray()
+            );
+        } catch (\Exception $e) {
+            $code = $e->getCode();
+            if (in_array($code, [403, 404])) {
+                return $this->error($code, $e->getMessage(), null);
+            }
+            return $this->serverError($e, "Error al obtener el detalle de la reserva");
+        }
+    }
+
+    /**
      * Crea una nueva reserva (HU-009).
      */
     public function store(CreateReservationRequest $request): JsonResponse
     {
         try {
             $user = auth('api')->user();
-            
+
             $reservation = $this->reservationUseCases->create(
                 $request->validated(),
                 $user->uuid
@@ -38,7 +86,7 @@ class ReservationController extends Controller
             if ($code === 404) {
                 return $this->error(404, $e->getMessage(), null);
             }
-            
+
             return $this->serverError($e, "Error al crear la reserva");
         }
     }

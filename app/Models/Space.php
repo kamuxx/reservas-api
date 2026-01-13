@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 class Space extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'spaces';
 
     protected $fillable = [
@@ -23,6 +23,17 @@ class Space extends Model
         'is_active',
         'created_by',
     ];
+
+    const STATUS_ACTIVE = 'active';
+    const STATUS_INACTIVE = 'inactive';
+    const STATUS_BOOKED = 'booked';
+    const STATUS_CANCELLED = 'cancelled';
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_PENDING = 'pending';
+    const STATUS_REFUNDED = 'refunded';
+    const STATUS_RESERVED = 'reserved';
+    const STATUS_WAITING = 'waiting';
+    const STATUS_CANCELED = 'canceled';
 
 
     protected $hidden = [
@@ -99,7 +110,7 @@ class Space extends Model
     {
         if ($minPrice !== null || $maxPrice !== null) {
             $query->join('pricing_rules', 'spaces.pricing_rule_id', '=', 'pricing_rules.uuid');
-            
+
             if ($minPrice !== null) {
                 $query->where('pricing_rules.price_adjustment', '>=', $minPrice);
             }
@@ -120,14 +131,14 @@ class Space extends Model
                     ->whereColumn('space_availability.space_id', 'spaces.uuid')
                     ->whereNull('space_availability.deleted_at');
             })
-            ->orWhereExists(function ($subquery) use ($date) {
-                $subquery->select(\DB::raw(1))
-                    ->from('space_availability')
-                    ->whereColumn('space_availability.space_id', 'spaces.uuid')
-                    ->whereDate('space_availability.available_date', $date)
-                    ->where('space_availability.is_available', true)
-                    ->whereNull('space_availability.deleted_at');
-            });
+                ->orWhereExists(function ($subquery) use ($date) {
+                    $subquery->select(\DB::raw(1))
+                        ->from('space_availability')
+                        ->whereColumn('space_availability.space_id', 'spaces.uuid')
+                        ->whereDate('space_availability.available_date', $date)
+                        ->where('space_availability.is_available', true)
+                        ->whereNull('space_availability.deleted_at');
+                });
         });
     }
 
@@ -153,5 +164,19 @@ class Space extends Model
                 ->groupBy('reservation.space_id')
                 ->havingRaw("$timeDiffSql >= 86400");
         });
+    }
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'space_id', 'uuid');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(SpaceImage::class, 'space_id', 'uuid');
+    }
+
+    public function features()
+    {
+        return $this->belongsToMany(Feature::class, 'space_features', 'space_id', 'feature_id', 'uuid', 'uuid');
     }
 }

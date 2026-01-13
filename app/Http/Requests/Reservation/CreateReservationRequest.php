@@ -28,6 +28,7 @@ class CreateReservationRequest extends FormRequest
             'event_date' => 'required|date|date_format:Y-m-d|after_or_equal:today',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
+            'event_price' => 'nullable|numeric|min:0',
         ];
     }
 

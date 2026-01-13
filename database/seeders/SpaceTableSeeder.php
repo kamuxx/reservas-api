@@ -237,53 +237,57 @@ class SpaceTableSeeder extends Seeder
                     ]);
                 }
 
-                // Crear horarios de disponibilidad para los próximos 30 días (solo espacios activos)
+                // Crear horarios de disponibilidad para Enero y Febrero 2026
                 if ($selectedStatus->name === 'active') {
-                    $startDate = Carbon::now();
-                    $endDate = Carbon::now()->addDays(30);
+                    $startDate = Carbon::create(2026, 1, 1);
+                    $endDate = Carbon::create(2026, 2, 28);
 
                     for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
-                        // Definir horarios según el tipo de espacio
-                        $schedules = match ($type->name) {
-                            'Auditorio de Conferencias', 'Espacio para Eventos Sociales' => [
-                                ['from' => '08:00', 'to' => '13:00'],
-                                ['from' => '14:00', 'to' => '18:00'],
-                                ['from' => '19:00', 'to' => '23:00'],
-                            ],
-                            'Oficina Compartida (Coworking)' => [
-                                ['from' => '06:00', 'to' => '14:00'],
-                                ['from' => '14:00', 'to' => '22:00'],
-                            ],
-                            'Terraza al Aire Libre' => [
-                                ['from' => '10:00', 'to' => '15:00'],
-                                ['from' => '16:00', 'to' => '21:00'],
-                            ],
-                            default => [
-                                ['from' => '08:00', 'to' => '12:00'],
-                                ['from' => '13:00', 'to' => '17:00'],
-                                ['from' => '18:00', 'to' => '22:00'],
-                            ],
-                        };
+                        // Generar horarios aleatorios sin solapamiento
+                        // Comenzar entre 7:00 y 9:00
+                        $startHour = rand(7, 9);
+                        $currentTime = Carbon::parse($date->format('Y-m-d') . " $startHour:00:00");
+                        $closingTime = Carbon::parse($date->format('Y-m-d') . " 22:00:00");
 
-                        foreach ($schedules as $schedule) {
-                            // 80% disponible, 20% ya reservado
-                            $isAvailable = rand(1, 100) <= 80;
+                        while ($currentTime->copy()->addHour()->lte($closingTime)) {
+                            // Duración del bloque: 1 a 4 horas
+                            $duration = rand(1, 4);
 
-                            \DB::table('space_availability')->insert([
-                                'uuid' => \Str::uuid(),
-                                'space_id' => $spaceUuid,
-                                'available_date' => $date->format('Y-m-d'),
-                                'available_from' => $schedule['from'],
-                                'available_to' => $schedule['to'],
-                                'is_available' => $isAvailable,
-                                'max_capacity' => $capacity,
-                                'slot_price' => rand(5000, 50000) / 100, // Precio entre $50 y $500
-                                'created_by' => $adminUser->uuid,
-                                'updated_by' => null,
-                                'created_at' => Carbon::now(),
-                                'updated_at' => Carbon::now(),
-                                'deleted_at' => null,
-                            ]);
+                            // Asegurar que no exceda la hora de cierre
+                            if ($currentTime->copy()->addHours($duration)->gt($closingTime)) {
+                                $duration = $currentTime->diffInHours($closingTime);
+                            }
+
+                            // Si la duración es 0 o menos, terminamos el día
+                            if ($duration < 1) break;
+
+                            $slotEnd = $currentTime->copy()->addHours($duration);
+
+                            // Decidir si insertamos este bloque (90% de probabilidad de que exista el turno)
+                            if (rand(1, 100) <= 90) {
+                                // 80% disponible, 20% ocupado/reservado
+                                $isAvailable = rand(1, 100) <= 80;
+
+                                \DB::table('space_availability')->insert([
+                                    'uuid' => \Str::uuid(),
+                                    'space_id' => $spaceUuid,
+                                    'available_date' => $date->format('Y-m-d'),
+                                    'available_from' => $currentTime->format('H:i'),
+                                    'available_to' => $slotEnd->format('H:i'),
+                                    'is_available' => $isAvailable,
+                                    'max_capacity' => $capacity,
+                                    'slot_price' => rand(5000, 50000) / 100,
+                                    'created_by' => $adminUser->uuid,
+                                    'updated_by' => null,
+                                    'created_at' => Carbon::now(),
+                                    'updated_at' => Carbon::now(),
+                                    'deleted_at' => null,
+                                ]);
+                            }
+
+                            // Avanzar tiempo: final del slot + gap aleatorio (0 a 2 horas)
+                            $gap = rand(0, 2);
+                            $currentTime = $slotEnd->addHours($gap);
                         }
                     }
                 }

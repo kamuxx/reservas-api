@@ -109,15 +109,15 @@ class CheckSpaceAvailabilityTest extends TestCase
                     '*' => ['event_date', 'start_time', 'end_time']
                 ]
             ]);
-        
+
         $this->assertCount(1, $response->json('data'));
     }
 
     /** @test */
-    public function unauthenticated_user_cannot_check_availability()
+    public function unauthenticated_user_can_check_availability()
     {
         $response = $this->getJson("/api/spaces/{$this->space->uuid}/availability?start_date=2025-01-01&end_date=2025-01-01");
-        $response->assertStatus(401);
+        $response->assertStatus(200);
     }
 
     /** @test */

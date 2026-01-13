@@ -45,7 +45,7 @@ class ReservationRepository extends BaseRepository
                     // El evento existente empieza antes de que el nuevo termine
                     // Y el evento existente termina después de que el nuevo empiece
                     $q->where('start_time', '<', $endTime)
-                      ->where('end_time', '>', $startTime);
+                        ->where('end_time', '>', $startTime);
                 });
             })
             ->exists();
@@ -54,5 +54,17 @@ class ReservationRepository extends BaseRepository
     public static function create(array $data): Reservation
     {
         return self::MODEL::create($data);
+    }
+
+    public static function getByUser(string $userUuid): Collection
+    {
+        return \App\Models\ReservationDetailView::byUser($userUuid)
+            ->orderBy('reservation_created_at', 'desc')
+            ->get();
+    }
+
+    public static function getDetail(string $reservationUuid)
+    {
+        return \App\Models\ReservationDetailView::where('reservation_uuid', $reservationUuid)->first();
     }
 }

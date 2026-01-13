@@ -27,17 +27,17 @@ class ReservationUseCasesTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->reservationRepository = Mockery::mock(ReservationRepository::class);
         $this->spaceRepository = Mockery::mock(SpaceRepository::class);
         $this->reservationUseCases = new ReservationUseCases($this->reservationRepository, $this->spaceRepository);
-        
+
         // Setup essential statuses and roles for UseCase logic and factories
         Status::create(['name' => 'confirmada', 'uuid' => 'status-confirmada']);
         Status::create(['name' => 'cancelada', 'uuid' => 'status-cancelada']);
         Status::create(['name' => 'active', 'uuid' => (string) \Illuminate\Support\Str::uuid()]);
         \App\Models\Role::create(['name' => 'user', 'uuid' => (string) \Illuminate\Support\Str::uuid()]);
-        
+
         // Add SpaceType and PricingRule for factories
         SpaceType::create(['name' => 'Default Room', 'uuid' => (string) \Illuminate\Support\Str::uuid()]);
         PricingRule::create([
@@ -58,7 +58,7 @@ class ReservationUseCasesTest extends TestCase
     public function test_create_reservation_space_not_found(): void
     {
         $data = ['space_id' => 'invalid-uuid'];
-        
+
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage("El espacio no existe.");
         $this->expectExceptionCode(404);
@@ -85,7 +85,7 @@ class ReservationUseCasesTest extends TestCase
             'adjustment_type' => 'fixed',
             'rule_type' => 'custom',
         ]);
-        
+
         $space = Space::create([
             'uuid' => (string) Str::uuid(),
             'name' => 'Space A',
@@ -162,7 +162,7 @@ class ReservationUseCasesTest extends TestCase
             'adjustment_type' => 'fixed',
             'rule_type' => 'custom'
         ]);
-        
+
         $reservation = Reservation::create([
             'uuid' => 'res-cancel-uuid',
             'reserved_by' => $user->uuid,
@@ -220,7 +220,7 @@ class ReservationUseCasesTest extends TestCase
     {
         $user = \App\Models\User::factory()->create();
         $spaceType = SpaceType::create(['name' => 'Sala 2', 'uuid' => (string) Str::uuid()]);
-        
+
         $space = Space::create([
             'uuid' => (string) Str::uuid(),
             'name' => 'Space No Price',
@@ -261,7 +261,7 @@ class ReservationUseCasesTest extends TestCase
             'adjustment_type' => 'fixed',
             'rule_type' => 'custom'
         ]);
-        
+
         $space = Space::create([
             'uuid' => (string) Str::uuid(),
             'name' => 'Space for Admin Cancel',
@@ -300,7 +300,7 @@ class ReservationUseCasesTest extends TestCase
             'price_adjustment' => 10,
             'adjustment_type' => 'fixed',
         ]);
-        
+
         $space = Space::create([
             'uuid' => (string) Str::uuid(),
             'name' => 'Space Bad Time',
@@ -333,7 +333,7 @@ class ReservationUseCasesTest extends TestCase
     {
         $user = \App\Models\User::factory()->create();
         $spaceType = SpaceType::create(['name' => 'Sala Fallback', 'uuid' => (string) Str::uuid()]);
-        
+
         // Rename confirmada status to trigger fallback instead of deleting (to avoid FK issues)
         Status::where('name', 'confirmada')->update(['name' => 'confirmada_disabled']);
         Status::create(['name' => 'agendada', 'uuid' => 'status-agendada']);
@@ -376,7 +376,7 @@ class ReservationUseCasesTest extends TestCase
         $user = \App\Models\User::factory()->create();
         $spaceType = SpaceType::where('name', 'Default Room')->first();
         $pricingRule = PricingRule::where('name', 'Default Rule')->first();
-        
+
         // Create space manually to avoid factory random status which might be 'cancelada'
         $space = Space::create([
             'uuid' => (string) Str::uuid(),
@@ -421,7 +421,7 @@ class ReservationUseCasesTest extends TestCase
             'price_adjustment' => 10,
             'adjustment_type' => 'percentage', // Not 'fixed'
         ]);
-        
+
         $space = Space::create([
             'uuid' => (string) Str::uuid(),
             'name' => 'Space Percent',
@@ -441,20 +441,25 @@ class ReservationUseCasesTest extends TestCase
         ];
 
         $this->reservationRepository->shouldReceive('hasOverlap')->andReturn(false);
-        $this->reservationRepository->shouldReceive('create')->once()->andReturn(new Reservation([
-            'uuid' => (string) Str::uuid(),
-            'event_price' => 0.0,
-        ]));
+        $this->reservationRepository->shouldReceive('create')
+            ->once()
+            ->with(Mockery::on(function ($arg) {
+                return $arg['event_price'] == 10.0;
+            }))
+            ->andReturn(new Reservation([
+                'uuid' => (string) Str::uuid(),
+                'event_price' => 10.0,
+            ]));
 
         $result = $this->reservationUseCases->create($data, $user->uuid);
-        $this->assertEquals(0.0, $result->event_price);
+        $this->assertEquals(10.0, $result->event_price);
     }
 
     public function test_create_reservation_last_status_fallback(): void
     {
         $user = \App\Models\User::factory()->create();
         $spaceType = SpaceType::create(['name' => 'Sala Last Fallback', 'uuid' => (string) Str::uuid()]);
-        
+
         // Rename all potential statuses to trigger Status::first() fallback
         Status::whereIn('name', ['confirmada', 'agendada', 'active'])->update(['name' => 'disabled']);
         $fallbackStatus = Status::create(['name' => 'Fallback', 'uuid' => 'fallback-uuid']);
@@ -498,7 +503,7 @@ class ReservationUseCasesTest extends TestCase
             'adjustment_type' => 'fixed',
             'rule_type' => 'custom'
         ]);
-        
+
         $statusFinalizada = Status::create(['name' => 'finalizada', 'uuid' => 'status-finalizada']);
 
         $reservation = Reservation::create([
@@ -519,5 +524,144 @@ class ReservationUseCasesTest extends TestCase
         $this->expectExceptionCode(422);
 
         $this->reservationUseCases->cancel('res-invalid-status', $user->uuid, 'user');
+    }
+    public function test_get_by_user_returns_collection(): void
+    {
+        $userUuid = 'user-uuid-123';
+        $mockCollection = new \Illuminate\Database\Eloquent\Collection([new Reservation()]);
+
+        $this->reservationRepository->shouldReceive('getByUser')
+            ->once()
+            ->with($userUuid)
+            ->andReturn($mockCollection);
+
+        $result = $this->reservationUseCases->getByUser($userUuid);
+
+        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $result);
+        $this->assertEquals($mockCollection, $result);
+    }
+
+    public function test_get_detail_returns_reservation_if_owner(): void
+    {
+        $reservationUuid = 'res-uuid-123';
+        $userUuid = 'user-uuid-123';
+        $roleName = 'user';
+
+        // Mock detail object (simulating ReservationDetailView)
+        $mockReservation = new \stdClass();
+        $mockReservation->reservation_uuid = $reservationUuid;
+        $mockReservation->user_uuid = $userUuid;
+
+        $this->reservationRepository->shouldReceive('getDetail')
+            ->once()
+            ->with($reservationUuid)
+            ->andReturn($mockReservation);
+
+        $result = $this->reservationUseCases->getDetail($reservationUuid, $userUuid, $roleName);
+
+        $this->assertEquals($mockReservation, $result);
+    }
+
+    public function test_get_detail_returns_reservation_if_admin(): void
+    {
+        $reservationUuid = 'res-uuid-123';
+        $userUuid = 'admin-uuid-123';
+        $ownerUuid = 'other-user-uuid';
+        $roleName = 'admin';
+
+        $mockReservation = new \stdClass();
+        $mockReservation->reservation_uuid = $reservationUuid;
+        $mockReservation->user_uuid = $ownerUuid;
+
+        $this->reservationRepository->shouldReceive('getDetail')
+            ->once()
+            ->with($reservationUuid)
+            ->andReturn($mockReservation);
+
+        $result = $this->reservationUseCases->getDetail($reservationUuid, $userUuid, $roleName);
+
+        $this->assertEquals($mockReservation, $result);
+    }
+
+    public function test_get_detail_throws_404_if_not_found(): void
+    {
+        $reservationUuid = 'res-not-found';
+        $userUuid = 'user-uuid';
+        $roleName = 'user';
+
+        $this->reservationRepository->shouldReceive('getDetail')
+            ->once()
+            ->with($reservationUuid)
+            ->andReturn(null);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("La reserva no existe.");
+        $this->expectExceptionCode(404);
+
+        $this->reservationUseCases->getDetail($reservationUuid, $userUuid, $roleName);
+    }
+
+    public function test_get_detail_throws_403_if_unauthorized(): void
+    {
+        $reservationUuid = 'res-uuid-123';
+        $userUuid = 'user-uuid-123';
+        $ownerUuid = 'other-user-uuid';
+        $roleName = 'user';
+
+        $mockReservation = new \stdClass();
+        $mockReservation->reservation_uuid = $reservationUuid;
+        $mockReservation->user_uuid = $ownerUuid;
+
+        $this->reservationRepository->shouldReceive('getDetail')
+            ->once()
+            ->with($reservationUuid)
+            ->andReturn($mockReservation);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("No tiene permisos para ver esta reserva.");
+        $this->expectExceptionCode(403);
+
+        $this->reservationUseCases->getDetail($reservationUuid, $userUuid, $roleName);
+    }
+    public function test_create_reservation_with_explicit_price(): void
+    {
+        $user = \App\Models\User::factory()->create();
+        $space = Space::factory()->create();
+
+        // Ensure the space has a pricing rule so we can verify it's IGNORED/Overridden
+        $pricingRule = PricingRule::create([
+            'name' => 'Should Be Ignored',
+            'uuid' => (string) Str::uuid(),
+            'price_adjustment' => 500, // High price, should not be used
+            'adjustment_type' => 'fixed',
+        ]);
+        $space->pricing_rule_id = $pricingRule->uuid;
+        $space->save();
+
+        $explicitPrice = 123.45;
+
+        $data = [
+            'space_id' => $space->uuid,
+            'event_name' => 'Explicit Price Event',
+            'event_date' => '2025-01-01',
+            'start_time' => '10:00',
+            'end_time' => '12:00',
+            'event_price' => $explicitPrice,
+        ];
+
+        $this->reservationRepository->shouldReceive('hasOverlap')->andReturn(false);
+        $this->reservationRepository->shouldReceive('create')
+            ->once()
+            ->with(Mockery::on(function ($arg) use ($explicitPrice) {
+                return $arg['event_price'] === $explicitPrice;
+            }))
+            ->andReturn(new Reservation([
+                'uuid' => (string) Str::uuid(),
+                'event_price' => $explicitPrice,
+            ]));
+
+        $result = $this->reservationUseCases->create($data, $user->uuid);
+
+        $this->assertEquals($explicitPrice, $result->event_price);
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Repositories\ReservationRepository;
 use Repositories\SpaceRepository;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
 class ReservationUseCases
 {
@@ -51,14 +52,19 @@ class ReservationUseCases
             }
 
             // Cálculo básico de precio basado en la regla del espacio
+            // Cálculo básico de precio basado en la regla del espacio
             $pricingRule = $space->pricingRule;
-            if (!$pricingRule) {
-                // Fallback a una regla por defecto o precio 0
-                $price = 0;
-                $pricingRuleUuid = null;
+            $pricingRuleUuid = $pricingRule ? $pricingRule->uuid : null;
+
+            if (array_key_exists('event_price', $data) && $data['event_price'] !== null) {
+                $price = $data['event_price'];
             } else {
-                $price = $this->calculatePrice($pricingRule, $data['start_time'], $data['end_time']);
-                $pricingRuleUuid = $pricingRule->uuid;
+                if (!$pricingRule) {
+                    // Fallback a una regla por defecto o precio 0
+                    $price = 0;
+                } else {
+                    $price = $this->calculatePrice($pricingRule, $data['start_time'], $data['end_time']);
+                }
             }
 
             $reservationData = [
@@ -112,7 +118,7 @@ class ReservationUseCases
             // 2. Validar estado (HU-010 Regla 4: Solo confirmada o agendada para ser flexible)
             $confirmadaStatus = Status::where('name', 'confirmada')->first();
             $agendadaStatus = Status::where('name', 'agendada')->first();
-            
+
             $validStatusUuids = [];
             if ($confirmadaStatus) $validStatusUuids[] = $confirmadaStatus->uuid;
             if ($agendadaStatus) $validStatusUuids[] = $agendadaStatus->uuid;
@@ -136,15 +142,15 @@ class ReservationUseCases
             $reservation->save();
 
             // 4. Auditoría
-                DB::table('entity_audit_trails')->insert([
-                    'entity_name' => 'reservation',
-                    'entity_id'   => $reservation->uuid,
-                    'operation'   => 'update',
-                    'after_state' => json_encode($reservation->toArray()),
-                    'user_uuid'   => $userUuid,
-                    'created_at'  => now(),
-                    'updated_at'  => now(),
-                ]);
+            DB::table('entity_audit_trails')->insert([
+                'entity_name' => 'reservation',
+                'entity_id'   => $reservation->uuid,
+                'operation'   => 'update',
+                'after_state' => json_encode($reservation->toArray()),
+                'user_uuid'   => $userUuid,
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ]);
 
             return $reservation;
         });
@@ -160,15 +166,61 @@ class ReservationUseCases
         try {
             $startTime = Carbon::createFromFormat('H:i', $start);
             $endTime = Carbon::createFromFormat('H:i', $end);
-            $hours = $startTime->diffInMinutes($endTime) / 60;
+
+            // Si la hora de fin es menor a la de inicio, asume día siguiente (aunque la validación lo impide)
+            if ($endTime->lt($startTime)) {
+                $endTime->addDay();
+            }
+
+            $hours = max(0, $startTime->diffInMinutes($endTime) / 60);
 
             if ($pricingRule->adjustment_type === 'fixed') {
                 return (float) ($pricingRule->price_adjustment * $hours);
             }
+
+            if ($pricingRule->adjustment_type === 'percentage') {
+                // Asumiendo un precio base por hora de alguna configuración o del espacio si existiera column
+                // Como no hay columna base_price en spaces, usamos el adjustment como tarifa por hora directamente si es positive
+                // O si es un recargo sobre un base 0?
+                // Revisando la logica actual, parece que solo hay 'price_adjustment'.
+                // Si es porcentaje, necesitamos una base. Como no hay base visible aqui,
+                // asumiremos que para este MVP el 'fixed' es el precio por hora.
+                if ($pricingRule->price_adjustment > 0) {
+                    return (float) ($pricingRule->price_adjustment * $hours);
+                }
+            }
+
+            return 0.00;
         } catch (\Throwable $th) {
+            // Log error if needed
             return 0.00;
         }
+    }
 
-        return 0.00;
+    /**
+     * Obtiene el detalle de una reserva validando permisos.
+     */
+    public function getDetail(string $reservationUuid, string $userUuid, string $roleName)
+    {
+        $reservation = $this->reservationRepository->getDetail($reservationUuid);
+
+        if (!$reservation) {
+            throw new \Exception("La reserva no existe.", 404);
+        }
+
+        // Valida si el usuario es dueño de la reserva o es admin
+        if ($roleName !== 'admin' && $reservation->user_uuid !== $userUuid) {
+            throw new \Exception("No tiene permisos para ver esta reserva.", 403);
+        }
+
+        return $reservation;
+    }
+
+    /**
+     * Obtiene las reservas de un usuario (HU-Listado).
+     */
+    public function getByUser(string $userUuid): Collection
+    {
+        return $this->reservationRepository->getByUser($userUuid);
     }
 }

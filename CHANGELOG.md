@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-01-13
+
+### 🔧 Corregido
+- **Gestión de Reservas:** Solucionado bug donde el precio calculado por el frontend era ignorado. Ahora el endpoint de creación respeta el `event_price` enviado en el request.
+- **Validación:** Se agregó `event_price` como campo opcional y numérico en `CreateReservationRequest`.
+
 ## [1.0.1] - 2026-01-08
 
 ### 🔧 Corregido

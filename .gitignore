@@ -31,3 +31,4 @@ auth.json
 /database/*.db*
 
 /test/coverage-html
+.agent/
