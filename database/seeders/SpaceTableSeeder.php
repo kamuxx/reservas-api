@@ -9,6 +9,7 @@ use App\Models\SpaceFeature;
 use App\Models\SpaceType;
 use App\Models\Status;
 use App\Models\User;
+use App\Models\SpaceComment;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +27,7 @@ class SpaceTableSeeder extends Seeder
         DB::table('space_features')->truncate();
         DB::table('space_images')->truncate();
         DB::table('space_availability')->truncate();
+        DB::table('space_comments')->truncate();
         DB::table('spaces')->truncate();
 
         // Obtener datos base necesarios
@@ -237,6 +239,12 @@ class SpaceTableSeeder extends Seeder
                     ]);
                 }
 
+                // Generar 4 comentarios por espacio
+                SpaceComment::factory()->count(4)->create([
+                    'space_id' => $spaceUuid,
+                    'user_id' => $adminUser->uuid,
+                ]);
+
                 // Crear horarios de disponibilidad para Enero y Febrero 2026
                 if ($selectedStatus->name === 'active') {
                     $startDate = Carbon::create(2026, 1, 1);
@@ -297,6 +305,7 @@ class SpaceTableSeeder extends Seeder
         $this->command->info("✅ Creados {$count} espacios con todas sus relaciones:");
         $this->command->info("   - Imágenes: " . \DB::table('space_images')->count());
         $this->command->info("   - Features: " . \DB::table('space_features')->count());
+        $this->command->info("   - Comentarios: " . \DB::table('space_comments')->count());
         $this->command->info("   - Horarios disponibles: " . \DB::table('space_availability')->count());
     }
 }

@@ -74,7 +74,7 @@ class SpaceUseCases
         });
     }
 
-public function list(array $filters, bool $isAdmin = false)
+    public function list(array $filters, bool $isAdmin = false)
     {
         if (!$isAdmin) {
             $filters['is_active'] = true;
@@ -90,7 +90,7 @@ public function list(array $filters, bool $isAdmin = false)
 
     public function find(string $id, bool $isAdmin = false): ?Space
     {
-        $space = $this->spaceRepository::findByUuid($id);
+        $space = $this->spaceRepository::findByIdWithRelations($id);
 
         if (!$space) {
             return null;
@@ -112,6 +112,7 @@ public function list(array $filters, bool $isAdmin = false)
 
         // \Log::info('Occupied slots found: ' . $occupiedSlots->count());
 
+        // occupiedSlots is now a Collection of ReservationDetailView models
         return $occupiedSlots->toArray();
     }
 

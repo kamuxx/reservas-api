@@ -6,6 +6,7 @@ use App\Models\Reservation;
 use App\Models\Status;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection as BaseCollection;
 
 class ReservationRepository extends BaseRepository
 {
@@ -14,17 +15,18 @@ class ReservationRepository extends BaseRepository
     public static function getOccupiedSlots(string $spaceUuid, string $startDate, string $endDate): Collection
     {
         $confirmedStatus = Status::where('name', 'confirmada')->first();
-        $statusUuid = $confirmedStatus ? $confirmedStatus->uuid : null;
+        // Since we are using the view, we query against 'status_name' or 'status_uuid'
+        // Ideally the view already has the status name. Let's filter by the view's columns.
 
-        $query = self::MODEL::query()
-            ->where('space_id', $spaceUuid)
-            ->where('status_id', $statusUuid)
+        $query = \App\Models\ReservationDetailView::query()
+            ->where('space_uuid', $spaceUuid)
+            ->where('status_name', 'active')
             ->whereDate('event_date', '>=', $startDate)
             ->whereDate('event_date', '<=', $endDate);
 
         return $query->orderBy('event_date')
             ->orderBy('start_time')
-            ->get(['event_date', 'start_time', 'end_time']);
+            ->get();
     }
 
     public static function hasOverlap(string $spaceUuid, string $date, string $startTime, string $endTime): bool
@@ -66,5 +68,20 @@ class ReservationRepository extends BaseRepository
     public static function getDetail(string $reservationUuid)
     {
         return \App\Models\ReservationDetailView::where('reservation_uuid', $reservationUuid)->first();
+    }
+
+    public static function getAll(string $modelClassName): Collection|BaseCollection
+    {
+        return \App\Models\ReservationDetailView::query()
+            ->orderBy('reservation_created_at', 'desc')
+            ->get();
+    }
+
+    public static function getBySpace(string $spaceUuid): Collection
+    {
+        return \App\Models\ReservationDetailView::query()
+            ->where('space_uuid', $spaceUuid)
+            ->orderBy('event_date', 'asc')
+            ->get();
     }
 }

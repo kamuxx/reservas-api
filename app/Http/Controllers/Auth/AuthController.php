@@ -12,6 +12,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthenticatedException;
+use App\Http\Requests\Auth\ChangePasswordRequest;
 
 class AuthController extends Controller
 {
@@ -71,6 +72,25 @@ class AuthController extends Controller
         } catch (\Throwable $th) {
             $message = "Error al cerrar sesión: " . $th->getMessage();     
             return $this->serverError($th, $message);
+        }
+    }
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        try {
+            /** @var \App\Models\User $user */
+            $user = auth('api')->user();
+            
+            $this->userUseCases->changePassword(
+                $user,
+                $request->current_password,
+                $request->new_password
+            );
+            
+            return $this->success(200, "Contraseña actualizada exitosamente");
+        } catch (UnprocessableEntityHttpException $e) {
+            return $this->clientError($e, $e->getMessage());
+        } catch (\Throwable $th) {
+            return $this->serverError($th, "Error al actualizar la contraseña");
         }
     }
 }

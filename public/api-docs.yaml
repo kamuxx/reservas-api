@@ -143,6 +143,23 @@ paths:
         '500':
           description: Error al procesar la solicitud
 
+  /api/auth/change-password:
+    post:
+      summary: Cambiar contraseña
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+      responses:
+        '200':
+          description: Contraseña actualizada exitosamente
+        '422':
+          description: Error de validación
+
   /api/spaces:
     get:
       summary: Consultar listado de espacios (Filtros y Paginación)
@@ -290,33 +307,88 @@ paths:
         '422':
           description: Error de validación
 
-  /api/spaces/{uuid}/availability:
-    get:
-      summary: Consultar disponibilidad de un espacio (HU-008)
+    delete:
+      summary: Eliminar un espacio (Admin)
       security:
         - bearerAuth: []
       parameters:
         - name: uuid
           in: path
           required: true
-          description: UUID del espacio
+          description: UUID del espacio a eliminar
           schema:
             type: string
             format: uuid
-        - name: start_date
-          in: query
+      responses:
+        '200':
+          description: Espacio eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Espacio eliminado exitosamente"
+        '401':
+          description: No autenticado
+        '403':
+          description: No autorizado (Solo administradores)
+        '404':
+          description: Espacio no encontrado
+
+  /api/spaces/{uuid}/comments:
+    post:
+      summary: Agregar comentario y calificación a un espacio
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uuid
+          in: path
           required: true
-          description: Fecha de inicio (YYYY-MM-DD)
           schema:
             type: string
-            format: date
-        - name: end_date
-          in: query
-          required: true
-          description: Fecha de fin (YYYY-MM-DD)
-          schema:
-            type: string
-            format: date
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSpaceCommentRequest'
+      responses:
+        '201':
+          description: Comentario creado exitosamente
+        '404':
+          description: Espacio no encontrado
+
+  /api/spaces/availability:
+    post:
+      summary: Consultar disponibilidad detallada de un espacio (HU-008)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - space_uuid
+                - start_date
+                - end_date
+              properties:
+                space_uuid:
+                  type: string
+                  format: uuid
+                start_date:
+                  type: string
+                  format: date
+                end_date:
+                  type: string
+                  format: date
       responses:
         '200':
           description: Disponibilidad del espacio obtenida exitosamente
@@ -393,6 +465,30 @@ paths:
           description: Error de validación
 
   /api/reservations:
+    get:
+      summary: Obtener listado de reservas del usuario (Mis Reservas)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Listado de reservas obtenido exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Reservas obtenidas exitosamente"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Reservation'
+        '500':
+          description: Error al obtener las reservas
     post:
       summary: Crear una nueva reserva (HU-009)
       security:
@@ -427,6 +523,38 @@ paths:
           description: Error de validación
 
   /api/reservations/{uuid}:
+    get:
+      summary: Obtener detalle de una reserva
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: UUID de la reserva
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Detalle de reserva obtenido exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Detalle de reserva obtenido exitosamente"
+                  data:
+                    $ref: '#/components/schemas/Reservation'
+        '403':
+          description: No autorizado (No es dueño de la reserva o no es admin)
+        '404':
+          description: Reserva no encontrada
     delete:
       summary: Cancelar una reserva (HU-010)
       security:
@@ -463,6 +591,81 @@ paths:
           description: Reserva no encontrada
         '422':
           description: Error - Solo se pueden cancelar reservas confirmadas
+
+  # ADMIN ROUTES
+  /api/v1/admin/dashboard:
+    get:
+      summary: Obtener estadísticas del dashboard (Admin)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Estadísticas obtenidas exitosamente
+
+  /api/v1/admin/spaces:
+    get:
+      summary: Listar espacios (Admin)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Listado de espacios
+    post:
+      summary: Crear espacio (Admin)
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterSpaceRequest'
+      responses:
+        '201':
+          description: Espacio creado
+
+  /api/v1/admin/spaces/{uuid}:
+    put:
+      summary: Actualizar espacio (Admin)
+      security:
+        - bearerAuth: []
+      parameters:
+         - name: uuid
+           in: path
+           required: true
+           schema:
+             type: string
+             format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSpaceRequest'
+      responses:
+        '200':
+          description: Espacio actualizado
+    delete:
+      summary: Eliminar espacio (Admin)
+      security:
+        - bearerAuth: []
+      parameters:
+         - name: uuid
+           in: path
+           required: true
+           schema:
+             type: string
+             format: uuid
+      responses:
+        '200':
+          description: Espacio eliminado
+
+  /api/v1/admin/reservations:
+    get:
+      summary: Listar todas las reservas (Admin)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Listado de reservas
 
 components:
   securitySchemes:
@@ -525,6 +728,23 @@ components:
           type: string
           example: "+584121234567"
 
+    ChangePasswordRequest:
+      type: object
+      required:
+        - current_password
+        - new_password
+        - new_password_confirmation
+      properties:
+        current_password:
+          type: string
+          format: password
+        new_password:
+          type: string
+          format: password
+        new_password_confirmation:
+          type: string
+          format: password
+
     LoginRequest:
       type: object
       required:
@@ -564,6 +784,19 @@ components:
           type: string
           description: Código de 6 dígitos
           example: "123456"
+
+    CreateSpaceCommentRequest:
+      type: object
+      required:
+        - comment
+        - rating
+      properties:
+        comment:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
 
     Space:
       type: object
@@ -742,6 +975,12 @@ components:
         end_time:
           type: string
           example: "11:00"
+        event_price:
+          type: number
+          format: float
+          nullable: true
+          description: "Precio del evento (opcional, si se provee sobrescribe el cálculo automático)"
+          example: 150.00
 
     UpdateSpaceRequest:
       type: object

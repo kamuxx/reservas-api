@@ -22,7 +22,8 @@ class CheckAvailabilityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start_date' => 'required|date|date_format:Y-m-d',
+            'space_uuid' => 'required|uuid|exists:spaces,uuid',
+            'start_date' => 'required|date|date_format:Y-m-d|after_or_equal:today',
             'end_date' => 'required|date|date_format:Y-m-d|after_or_equal:start_date',
         ];
     }

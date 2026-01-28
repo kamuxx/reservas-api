@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserUseCases
 {
@@ -136,6 +137,20 @@ class UserUseCases
             return true;
         } catch (Throwable $e) {
             $exceptionMessage = "Error al cerrar sesión: " . $e->getMessage();
+            throw new \Exception($exceptionMessage);
+        }
+    }
+    public function changePassword(User $user, string $currentPassword, string $newPassword): void
+    {
+        if (!$user->isValidPassword($currentPassword)) {
+            throw new UnprocessableEntityHttpException("La contraseña actual es incorrecta");
+        }
+
+        try {
+            $hashedPassword = Hash::make($newPassword);
+            $this->userRepository::updateUser(["uuid" => $user->uuid], ["password" => $hashedPassword]);
+        } catch (Throwable $e) {
+            $exceptionMessage = "Error al cambiar la contraseña: " . $e->getMessage();
             throw new \Exception($exceptionMessage);
         }
     }

@@ -15,14 +15,14 @@ use App\Http\Requests\Space\ListAvailableSpacesRequest;
 
 class SpaceController extends Controller
 {
-    public function __construct(private SpaceUseCases $spaceUseCases){}
+    public function __construct(private SpaceUseCases $spaceUseCases) {}
 
     public function index(ListSpacesRequest $request)
     {
         try {
             $user = auth('api')->user();
             $isAdmin = $user && $user->role && $user->role->name === 'admin';
-            
+
             $spaces = $this->spaceUseCases->list($request->validated(), $isAdmin);
             return $this->success(200, "Listado de espacios obtenido exitosamente", $spaces->toArray());
         } catch (\Throwable $th) {
@@ -57,7 +57,7 @@ class SpaceController extends Controller
         try {
             $data = $request->validated();
             $this->spaceUseCases->update($space, $data);
-            return $this->success(200, "Espacio actualizado exitosamente");   
+            return $this->success(200, "Espacio actualizado exitosamente");
         } catch (\Throwable $th) {
             return $this->serverError($th, "Error al actualizar el espacio");
         }
@@ -68,33 +68,34 @@ class SpaceController extends Controller
         try {
             $user = auth('api')->user();
             $isAdmin = $user && $user->role && $user->role->name === 'admin';
-            
+
             $space = $this->spaceUseCases->find($id, $isAdmin);
-            
+
             if (!$space) {
                 return $this->error(404, "Espacio no encontrado", null);
             }
-            
+
             return $this->success(200, "Detalle del espacio obtenido exitosamente", $space->toArray());
         } catch (\Throwable $th) {
             return $this->serverError($th, "Error al obtener el detalle del espacio");
         }
     }
 
-    public function availability(CheckAvailabilityRequest $request, string $id)
+    public function availability(CheckAvailabilityRequest $request)
     {
         try {
             $user = auth('api')->user();
             $isAdmin = $user && $user->role && $user->role->name === 'admin';
-            
-            $space = $this->spaceUseCases->find($id, $isAdmin);
-            
+
+            $spaceUuid = $request->input('space_uuid');
+            $space = $this->spaceUseCases->find($spaceUuid, $isAdmin);
+
             if (!$space) {
                 return $this->error(404, "Espacio no encontrado", null);
             }
-            
-            $availability = $this->spaceUseCases->checkAvailability($id, $request->validated());
-            
+
+            $availability = $this->spaceUseCases->checkAvailability($spaceUuid, $request->validated());
+
             return $this->success(200, "Disponibilidad del espacio obtenida exitosamente", $availability);
         } catch (\Throwable $th) {
             return $this->serverError($th, "Error al obtener la disponibilidad del espacio");

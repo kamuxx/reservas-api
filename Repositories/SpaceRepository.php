@@ -8,8 +8,11 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use PDOException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
-class SpaceRepository extends BaseRepository
+use Repositories\Contracts\SpaceRepositoryInterface;
+
+class SpaceRepository extends BaseRepository implements SpaceRepositoryInterface
 {
     const MODEL = Space::class;
     const DATE = Carbon::class;
@@ -35,8 +38,8 @@ class SpaceRepository extends BaseRepository
     {
         try {
             // Eager load relationships to avoid N+1 and get images
-            $query = self::MODEL::query()
-                ->with(['spaceType', 'status', 'images', 'features']);
+            $query = self::MODEL::query();
+                $query->with(['spaceType', 'status', 'images', 'features']);
 
             if (isset($filters['capacity'])) {
                 $query->where('capacity', '>=', $filters['capacity']);
@@ -105,18 +108,121 @@ class SpaceRepository extends BaseRepository
         return self::getOneBy(self::MODEL, ['uuid' => $uuid]);
     }
 
+    public static function findByIdWithRelations(string $id): ?Space
+    {
+        $query = self::MODEL::query()
+            ->where('uuid', $id)
+            ->with([
+                'spaceType',
+                'status',
+                'images',
+                'features',
+                'reservations',
+                'comments' => function ($query) {
+                    $query->byLatest()
+                        ->select(['id', 'space_id', 'user_id', 'comment', 'rating', 'created_at'])
+                        ->with(['user:id,uuid,name,email,avatar']); // Optimized select for user. Assuming avatar column exists or will be added.
+                }
+            ]);
+
+        return $query->first();
+    }
+
+    public static function paginateAdmin(array $filters, int $perPage = 15): LengthAwarePaginator
+    {
+        $query = self::MODEL::query()
+            ->with(['spaceType', 'location', 'pricingRule', 'status', 'created_by' => function ($q) {
+                $q->select('uuid', 'name', 'email'); // Optimize user selection
+            }]);
+
+        if (isset($filters['name'])) {
+            $query->where('name', 'LIKE', '%' . $filters['name'] . '%');
+        }
+
+        if (isset($filters['spaces_type_id'])) {
+            $query->where('spaces_type_id', $filters['spaces_type_id']);
+        }
+
+        return $query->paginate($perPage);
+    }
+
+    public static function hasActiveReservations(string $uuid): bool
+    {
+        return DB::table('reservations')
+            ->join('reservation_statuses', 'reservations.status_id', '=', 'reservation_statuses.uuid')
+            ->where('reservations.space_id', $uuid)
+            ->whereIn('reservation_statuses.status_name', ['confirmada', 'agendada'])
+            ->whereNull('reservations.deleted_at')
+            ->exists();
+    }
+
+    public static function getDashboardStats(): array
+    {
+        // 1. KPI Stats
+        $totalSpaces = self::MODEL::count();
+        $totalReservationsMonth = DB::table('reservations')
+            ->whereMonth('event_date', now()->month)
+            ->whereYear('event_date', now()->year)
+            ->whereNull('deleted_at')
+            ->count();
+
+        // Estimated Revenue (Simple sum of event_price for confirmed reservations this month)
+        $estimatedRevenue = DB::table('reservations')
+            ->join('reservation_statuses', 'reservations.status_id', '=', 'reservation_statuses.uuid')
+            ->where('reservation_statuses.status_name', 'confirmada')
+            ->whereMonth('reservations.event_date', now()->month)
+            ->whereYear('reservations.event_date', now()->year)
+            ->whereNull('reservations.deleted_at')
+            ->sum('event_price');
+
+        // 2. Occupancy Chart (Top 5 Spaces by Reservations count in current month)
+        $occupancyChart = DB::table('reservations')
+            ->select('spaces.name', DB::raw('count(*) as total'))
+            ->join('spaces', 'reservations.space_id', '=', 'spaces.uuid')
+            ->whereMonth('reservations.event_date', now()->month)
+            ->whereYear('reservations.event_date', now()->year)
+            ->whereNull('reservations.deleted_at')
+            ->groupBy('spaces.name')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get();
+
+        // 3. Status Chart (Reservations by Status)
+        $statusChart = DB::table('reservations')
+            ->select('reservation_statuses.status_name', DB::raw('count(*) as total'))
+            ->join('reservation_statuses', 'reservations.status_id', '=', 'reservation_statuses.uuid')
+            ->whereNull('reservations.deleted_at')
+            ->groupBy('reservation_statuses.status_name')
+            ->get();
+
+        return [
+            'kpi' => [
+                'total_spaces' => $totalSpaces,
+                'total_reservations_month' => $totalReservationsMonth,
+                'estimated_revenue' => $estimatedRevenue
+            ],
+            'occupancy_chart' => $occupancyChart,
+            'status_chart' => $statusChart
+        ];
+    }
+
     public static function getAvailableSpaces(array $filters)
     {
-        $date = $filters['fecha_deseada'];
+        $query = self::MODEL::query();
+        $query->with(['spaceType', 'status', 'images', 'features']);
 
-        return self::MODEL::query()
-            ->active()
-            ->byType($filters['space_type_id'] ?? null)
-            ->byMinCapacity($filters['min_capacity'] ?? null)
-            ->withAllFeatures($filters['feature_ids'] ?? null)
-            ->byPriceRange($filters['min_price'] ?? null, $filters['max_price'] ?? null)
-            ->availableOnDate($date)
-            ->notFullyBooked($date)
-            ->get();
+        if (isset($filters['capacity'])) {
+            $query->where('capacity', '>=', $filters['capacity']);
+        }
+
+        if (isset($filters['spaces_type_id'])) {
+            $query->where('spaces_type_id', $filters['spaces_type_id']);
+        }
+
+        if (isset($filters['is_active'])) {
+            $query->where('is_active', $filters['is_active']);
+        }
+
+        return $query->get();
     }
 }

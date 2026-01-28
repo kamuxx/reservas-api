@@ -7,11 +7,26 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-01-28
+
+### 📚 Documentación
+- **Sincronización OpenAPI:** Actualización exhaustiva de `public/api-docs.yaml` para alinear la documentación con las rutas existentes en `api.php`.
+    - **Admin Module:** Inclusión de todas las rutas de administración (`/api/v1/admin`: Dashboard, Espacios, Reservas).
+    - **Auth:** Agregada ruta faltante `POST /api/auth/change-password`.
+    - **Correcciones:** Ajuste de método para disponibilidad (`POST /api/spaces/availability`) y documentación de comentarios en espacios.
+
 ## [1.0.2] - 2026-01-13
 
 ### 🔧 Corregido
 - **Gestión de Reservas:** Solucionado bug donde el precio calculado por el frontend era ignorado. Ahora el endpoint de creación respeta el `event_price` enviado en el request.
 - **Validación:** Se agregó `event_price` como campo opcional y numérico en `CreateReservationRequest`.
+
+### 📚 Documentación
+- **Swagger:** Actualizado `public/api-docs.yaml` incluyendo documentación para:
+    - `GET /api/reservations` (Mis Reservas)
+    - `GET /api/reservations/{uuid}` (Detalle de Reserva)
+    - `DELETE /api/spaces/{uuid}` (Eliminación de Espacios)
+    - Campo `event_price` en creación de reserva.
 
 ## [1.0.1] - 2026-01-08
 

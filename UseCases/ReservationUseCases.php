@@ -223,4 +223,20 @@ class ReservationUseCases
     {
         return $this->reservationRepository->getByUser($userUuid);
     }
+
+    /**
+     * Obtiene todas las reservas (Admin).
+     */
+    public function getAll(): Collection
+    {
+        return $this->reservationRepository->getAll(Reservation::class);
+    }
+
+    /**
+     * Obtiene reservas por espacio (Admin).
+     */
+    public function getBySpace(string $spaceUuid): Collection
+    {
+        return $this->reservationRepository->getBySpace($spaceUuid);
+    }
 }

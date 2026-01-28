@@ -70,6 +70,11 @@ class Space extends Model
         return $this->belongsTo(PricingRule::class, 'pricing_rule_id', 'uuid');
     }
 
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'location_id', 'uuid');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('spaces.is_active', true);
@@ -175,8 +180,17 @@ class Space extends Model
         return $this->hasMany(SpaceImage::class, 'space_id', 'uuid');
     }
 
+    public function comments()
+    {
+        return $this->hasMany(SpaceComment::class, 'space_id', 'uuid');
+    }
+
     public function features()
     {
         return $this->belongsToMany(Feature::class, 'space_features', 'space_id', 'feature_id', 'uuid', 'uuid');
+    }
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'uuid');
     }
 }

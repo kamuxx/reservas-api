@@ -6,6 +6,7 @@ use App\Http\Controllers\SpaceController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\Api\SpaceCommentController;
 
 Route::group(["middleware" => ["auth:api"]], function () {
     Route::get('/user', function (Request $request) {
@@ -31,16 +32,19 @@ Route::group(["prefix" => "auth"], function () {
 
     Route::group(["middleware" => "auth:api"], function () {
         Route::post("/logout", [AuthController::class, "logout"])->name("logout");
+        Route::post("/change-password", [AuthController::class, "changePassword"])->name("change-password");
     });
 });
 
 Route::group(["prefix" => "spaces"], function () {
     Route::get("", [SpaceController::class, "index"])->name("spaces.index");
     Route::get("/available", [SpaceController::class, "available"])->name("spaces.available");
-    Route::get("/{id}/availability", [SpaceController::class, "availability"])->name("spaces.availability");
+    Route::post("/availability", [SpaceController::class, "availability"])->name("spaces.availability");
     Route::get("/{id}", [SpaceController::class, "show"])->name("spaces.show");
 
-    Route::group(["middleware" => ["auth:api"]], function () {});
+    Route::group(["middleware" => ["auth:api"]], function () {
+        Route::post("/{uuid}/comments", [SpaceCommentController::class, "store"])->name("spaces.comments.store");
+    });
 
     Route::group(["middleware" => ["auth:api", "isAdmin"]], function () {
         Route::post("", [SpaceController::class, "store"])->name("spaces.store");
@@ -54,4 +58,14 @@ Route::middleware('auth:api')->prefix('reservations')->group(function () {
     Route::get("/{id}", [ReservationController::class, "show"])->name("reservations.show");
     Route::post("", [ReservationController::class, "store"])->name("reservations.store");
     Route::delete("/{id}", [ReservationController::class, "destroy"])->name("reservations.destroy");
+});
+
+// Admin Routes (New)
+Route::group(['prefix' => 'v1/admin', 'middleware' => ['auth:api', 'isAdmin']], function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Api\Admin\DashboardController::class, 'index']);
+    Route::get('/spaces', [\App\Http\Controllers\Api\Admin\SpaceController::class, 'index']);
+    Route::post('/spaces', [\App\Http\Controllers\Api\Admin\SpaceController::class, 'store']);
+    Route::put('/spaces/{uuid}', [\App\Http\Controllers\Api\Admin\SpaceController::class, 'update']);
+    Route::delete('/spaces/{uuid}', [\App\Http\Controllers\Api\Admin\SpaceController::class, 'destroy']);
+    Route::get('/reservations', [\App\Http\Controllers\Api\Admin\ReservationController::class, 'index']);
 });
